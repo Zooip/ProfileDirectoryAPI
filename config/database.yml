@@ -102,7 +102,7 @@ development:
 test:
   <<: *default
   database: gram_api_test
-  username: gram_api_dev
+  username: gram_api_test
   password: password1
 
 #
