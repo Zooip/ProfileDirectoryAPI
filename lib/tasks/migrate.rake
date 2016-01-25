@@ -4,7 +4,7 @@ namespace :gram do
     desc 'Migrates the your_engine database'
     task :migrate => :environment do
       with_gram_connection do
-        ActiveRecord::Migrator.migrate("db/migrate/gram_db/")
+        ActiveRecord::Migrator.migrate("db/migrate_gram/")
       end
     end
   end
