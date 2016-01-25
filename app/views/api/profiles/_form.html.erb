@@ -1,0 +1,65 @@
+<%= form_for(@gram_profile) do |f| %>
+  <% if @gram_profile.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@gram_profile.errors.count, "error") %> prohibited this gram_profile from being saved:</h2>
+
+      <ul>
+      <% @gram_profile.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :soce_id %><br>
+    <%= f.number_field :soce_id %>
+  </div>
+  <div class="field">
+    <%= f.label :first_name %><br>
+    <%= f.text_field :first_name %>
+  </div>
+  <div class="field">
+    <%= f.label :last_name %><br>
+    <%= f.text_field :last_name %>
+  </div>
+  <div class="field">
+    <%= f.label :birth_last_name %><br>
+    <%= f.text_field :birth_last_name %>
+  </div>
+  <div class="field">
+    <%= f.label :gender %><br>
+    <%= f.text_field :gender %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br>
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :birth_date %><br>
+    <%= f.date_select :birth_date %>
+  </div>
+  <div class="field">
+    <%= f.label :death_date %><br>
+    <%= f.date_select :death_date %>
+  </div>
+  <div class="field">
+    <%= f.label :login_validation_check %><br>
+    <%= f.text_field :login_validation_check %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :created_at %><br>
+    <%= f.datetime_select :created_at %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_at %><br>
+    <%= f.datetime_select :updated_at %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
