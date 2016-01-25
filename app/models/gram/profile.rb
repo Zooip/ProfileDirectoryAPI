@@ -22,7 +22,7 @@ class Gram::Profile < Gram::Base
 
 
   ## RELATIONS ############################
-  has_many :connection_aliases
+  has_many :connection_aliases, dependent: :destroy
 
   ## VALIDATIONS ##########################  
   validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}

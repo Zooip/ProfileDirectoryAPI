@@ -18,17 +18,17 @@ require 'rails_helper'
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
-RSpec.describe Api::ProfilesController, type: :controller do
+RSpec.describe Api::V2::ProfilesController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
   # Gram::Profile. As you add validations to Gram::Profile, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    FactoryGirl.attributes_for(:gram_profile, first_name:"Jean")
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    FactoryGirl.attributes_for(:invalid_gram_profile)
   }
 
   # This should return the minimal set of values that should be in the session
@@ -39,7 +39,7 @@ RSpec.describe Api::ProfilesController, type: :controller do
   describe "GET #index" do
     it "assigns all gram_profiles as @gram_profiles" do
       profile = Gram::Profile.create! valid_attributes
-      get :index, {}, valid_session
+      get :index, {format: :json,}, valid_session
       expect(assigns(:gram_profiles)).to eq([profile])
     end
   end
@@ -47,96 +47,72 @@ RSpec.describe Api::ProfilesController, type: :controller do
   describe "GET #show" do
     it "assigns the requested api_profile as @api_profile" do
       profile = Gram::Profile.create! valid_attributes
-      get :show, {:id => profile.to_param}, valid_session
-      expect(assigns(:api_profile)).to eq(profile)
+      get :show, {format: :json,:id => profile.id}, valid_session
+      expect(assigns(:gram_profile)).to eq(profile)
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new api_profile as @api_profile" do
-      get :new, {}, valid_session
-      expect(assigns(:api_profile)).to be_a_new(Gram::Profile)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested api_profile as @api_profile" do
-      profile = Gram::Profile.create! valid_attributes
-      get :edit, {:id => profile.to_param}, valid_session
-      expect(assigns(:api_profile)).to eq(profile)
-    end
-  end
 
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Gram::Profile" do
         expect {
-          post :create, {:api_profile => valid_attributes}, valid_session
+          post :create, {format: :json,:profile => valid_attributes}, valid_session
         }.to change(Gram::Profile, :count).by(1)
       end
 
       it "assigns a newly created api_profile as @api_profile" do
-        post :create, {:api_profile => valid_attributes}, valid_session
-        expect(assigns(:api_profile)).to be_a(Gram::Profile)
-        expect(assigns(:api_profile)).to be_persisted
+        post :create, {format: :json,:profile => valid_attributes}, valid_session
+        expect(assigns(:gram_profile)).to be_a(Gram::Profile)
+        expect(assigns(:gram_profile)).to be_persisted
       end
 
-      it "redirects to the created api_profile" do
-        post :create, {:api_profile => valid_attributes}, valid_session
-        expect(response).to redirect_to(Gram::Profile.last)
+      it do
+        post :create, {format: :json,:profile => valid_attributes}, valid_session
+        is_expected.to respond_with(:created)
       end
     end
 
     context "with invalid params" do
-      it "assigns a newly created but unsaved api_profile as @api_profile" do
-        post :create, {:api_profile => invalid_attributes}, valid_session
-        expect(assigns(:api_profile)).to be_a_new(Gram::Profile)
+      it do
+        post :create, {format: :json,:profile => invalid_attributes}, valid_session
+        is_expected.to respond_with(:unprocessable_entity)
       end
 
-      it "re-renders the 'new' template" do
-        post :create, {:api_profile => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
-      end
     end
   end
 
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        FactoryGirl.attributes_for(:gram_profile, first_name:"Jacques")
       }
 
       it "updates the requested api_profile" do
         profile = Gram::Profile.create! valid_attributes
-        put :update, {:id => profile.to_param, :api_profile => new_attributes}, valid_session
+        put :update, {format: :json,:id => profile.to_param, :profile => new_attributes}, valid_session
         profile.reload
-        skip("Add assertions for updated state")
+        expect(profile.first_name).to eq('Jacques')
       end
 
       it "assigns the requested api_profile as @api_profile" do
         profile = Gram::Profile.create! valid_attributes
-        put :update, {:id => profile.to_param, :api_profile => valid_attributes}, valid_session
-        expect(assigns(:api_profile)).to eq(profile)
+        put :update, {format: :json,:id => profile.to_param, :profile => valid_attributes}, valid_session
+        expect(assigns(:gram_profile)).to eq(profile)
       end
 
-      it "redirects to the api_profile" do
+      it do
         profile = Gram::Profile.create! valid_attributes
-        put :update, {:id => profile.to_param, :api_profile => valid_attributes}, valid_session
-        expect(response).to redirect_to(profile)
+        put :update, {format: :json,:id => profile.to_param, :profile => valid_attributes}, valid_session
+        is_expected.to respond_with(:ok)
       end
     end
 
     context "with invalid params" do
-      it "assigns the api_profile as @api_profile" do
+      it do
         profile = Gram::Profile.create! valid_attributes
-        put :update, {:id => profile.to_param, :api_profile => invalid_attributes}, valid_session
-        expect(assigns(:api_profile)).to eq(profile)
-      end
-
-      it "re-renders the 'edit' template" do
-        profile = Gram::Profile.create! valid_attributes
-        put :update, {:id => profile.to_param, :api_profile => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
+        put :update, {format: :json,:id => profile.to_param, :profile => invalid_attributes}, valid_session
+        is_expected.to respond_with(:unprocessable_entity)
       end
     end
   end
@@ -145,14 +121,14 @@ RSpec.describe Api::ProfilesController, type: :controller do
     it "destroys the requested api_profile" do
       profile = Gram::Profile.create! valid_attributes
       expect {
-        delete :destroy, {:id => profile.to_param}, valid_session
+        delete :destroy, {format: :json,:id => profile.to_param}, valid_session
       }.to change(Gram::Profile, :count).by(-1)
     end
 
-    it "redirects to the gram_profiles list" do
+    it do
       profile = Gram::Profile.create! valid_attributes
-      delete :destroy, {:id => profile.to_param}, valid_session
-      expect(response).to redirect_to(gram_profiles_url)
+      delete :destroy, {format: :json,:id => profile.to_param}, valid_session
+      is_expected.to respond_with(:no_content)
     end
   end
 

@@ -3,8 +3,10 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
 
-  namespace :api do
-    resources :profiles
+  namespace :api, constraints: { format: 'json' } do
+    namespace :v2 do
+      resources :profiles, :defaults => { :format => :json }      
+    end
   end
 
   # You can have the root of your site routed with "root"

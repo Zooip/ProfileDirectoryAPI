@@ -16,29 +16,37 @@ RSpec.describe Gram::Profile, type: :model do
   it {is_expected.to validate_presence_of :encrypted_password}
   it {is_expected.to validate_inclusion_of(:gender).in_array(['male','female'])}
   it "validate presence of :soce_id" do
-    account=FactoryGirl.create(:gram_profile, create_without_aliases:true)
-    account.soce_id=nil
-    expect(account.valid?).to eq(false)
+    profile=FactoryGirl.create(:gram_profile, create_without_aliases:true)
+    profile.soce_id=nil
+    expect(profile.valid?).to eq(false)
   end
+
+  it "destroy its connection_aliases when destroyes" do |variable|
+    profile=FactoryGirl.create(:gram_profile, create_without_aliases:true)
+    con_alias=FactoryGirl.create(:gram_connection_alias, profile: profile)
+    profile.destroy
+    expect(Gram::ConnectionAlias.exists?(con_alias.id)).to eq(false)
+  end
+
 
   describe "validate that :soce_id is an integer" do
     it "invalidate strings in :soce_id" do
-      account=FactoryGirl.create(:gram_profile, create_without_aliases:true)
-      account.soce_id="string"
-      expect(account.valid?).to eq(false)
+      profile=FactoryGirl.create(:gram_profile, create_without_aliases:true)
+      profile.soce_id="string"
+      expect(profile.valid?).to eq(false)
     end
 
     it "invalidate non integer numbers in :soce_id" do
-      account=FactoryGirl.create(:gram_profile, create_without_aliases:true)
-      account.soce_id=157.211
-      expect(account.valid?).to eq(false)
+      profile=FactoryGirl.create(:gram_profile, create_without_aliases:true)
+      profile.soce_id=157.211
+      expect(profile.valid?).to eq(false)
     end
   end
 
 
   it "generate can be created without aliases" do
-    account=FactoryGirl.create(:gram_profile, create_without_aliases:true)
-    expect(account.connection_aliases.count).to eq(0)
+    profile=FactoryGirl.create(:gram_profile, create_without_aliases:true)
+    expect(profile.connection_aliases.count).to eq(0)
   end
 
   describe "Soce_id auto_increment" do

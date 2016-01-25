@@ -10,6 +10,15 @@ FactoryGirl.define do
     contact_phone           { [Faker::PhoneNumber.phone_number,nil].sample }
     login_validation_check  { ["CGU="+[Faker::Date.between(2.years.ago, Date.today).strftime("%d/%m/%Y"),""].sample,nil].sample}
     description             "Généré via FactoryGirl"
+    gender                  { ['male','female',nil].sample}
+
+
+    factory :invalid_gram_profile do
+      email nil
+    end
+
   end
+
+
 
 end
