@@ -49,6 +49,29 @@ RSpec.describe Gram::Profile, type: :model do
     expect(profile.connection_aliases.count).to eq(0)
   end
 
+  describe "sync email and emergency_email" do
+    context "when there is not emergency_email" do
+      it "update :emergency_email with value of :email" do
+        profile=FactoryGirl.create(:gram_profile,email:'roland.vardanega@gadz.org', emergency_email:nil, create_without_aliases:true)
+        expect(profile.emergency_email).to eq("roland.vardanega@gadz.org")
+      end
+    end    
+    context "when they are the same before the update" do
+      it "update :emergency_email with value of :email" do
+        profile=FactoryGirl.create(:gram_profile,email:'roland.vardanega@gadz.org', emergency_email:'roland.vardanega@gadz.org', create_without_aliases:true)
+        profile.update_attribute(:email,"roland@gadz.org")
+        expect(profile.emergency_email).to eq("roland@gadz.org")
+      end
+    end
+    context "when they are different before the update" do
+      it "doesn't change :emergency_email value" do
+        profile=FactoryGirl.create(:gram_profile,email:'roland.vardanega@gadz.org', emergency_email:'roland211@hotmail.com', create_without_aliases:true)
+        profile.update_attribute(:email,"roland@gadz.org")
+        expect(profile.emergency_email).to eq("roland211@hotmail.com")
+      end
+    end
+  end
+
   describe "Soce_id auto_increment" do
 
     it "auto increment soce_id" do

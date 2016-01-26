@@ -1,14 +1,17 @@
 class Api::V2::ProfilesController < ApplicationController
   before_action :set_gram_profile, only: [:show, :update, :destroy]
+  before_action :set_debug_headers
 
   # GET /gram/profiles.json
   def index
     @gram_profiles = Gram::Profile.all
+    render json: @gram_profiles
   end
 
 
   # GET /gram/profiles/1.json
   def show
+    render json: @gram_profile
   end
 
   # POST /gram/profiles.json
@@ -54,6 +57,10 @@ class Api::V2::ProfilesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def gram_profile_params
       params.require(:profile).permit(:soce_id, :first_name, :last_name, :birth_last_name, :gender, :email, :birth_date, :death_date, :login_validation_check, :description, :created_at, :updated_at, :encrypted_password)
+    end
+
+    def set_debug_headers
+      response.headers['X-Debug-Time'] = 'true'
     end
 end
 

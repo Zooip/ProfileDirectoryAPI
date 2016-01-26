@@ -32,6 +32,7 @@ class Gram::Profile < Gram::Base
 
   ## CALLBACKS  ###########################  
   after_create :create_default_account_aliases, if: :with_aliases?
+  before_save :sync_similar_attributes
   before_validation(:on => :create) do 
     if attribute_present?(:soce_id)
       set_soce_id_seq_value_to_max
@@ -49,7 +50,7 @@ class Gram::Profile < Gram::Base
   end
 
   ## PUBLIC CLASS METHODS #################
-
+  
 
   private
   ## PRIVATE INSTANCE METHODS #############
@@ -60,7 +61,11 @@ class Gram::Profile < Gram::Base
     end
 
     def set_default_values
-      self.emergency_email ||= self.email
+      self.emergency_email||= self.email
+    end
+
+    def sync_similar_attributes
+      self.emergency_email= self.email if self.changes["email"] and (self.changes["email"][0] == self.emergency_email)
     end
 
     def with_aliases?
@@ -68,11 +73,12 @@ class Gram::Profile < Gram::Base
     end
 
     def next_soce_id_seq_value
-      Gram::SoceId.next_soce_id_seq_value
+      result = self.class.connection.execute("SELECT nextval('soce_id_seq')")
+      result[0]['nextval']
     end
 
     def set_soce_id_seq_value_to_max
-      Gram::SoceId.set_soce_id_seq_value_to_max(self.soce_id)
+      self.class.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, ["SELECT setval('soce_id_seq',(SELECT GREATEST((SELECT MAX(soce_id) FROM profiles),?)))",self.soce_id]))
     end
 
   ## PRIVATE CLASS METHODS ################

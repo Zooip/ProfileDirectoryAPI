@@ -35,6 +35,12 @@ module GramV2
                        :request_specs => true
       g.fixture_replacement :factory_girl, :dir => "spec/factories"
     end
+
+
+    config.middleware.use "PrettyJson"
+    config.middleware.use "ResponseTimer"
+    config.middleware.use "CatchJsonParseErrors"
+
   end
 end
 

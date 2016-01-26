@@ -9,6 +9,8 @@ gem 'rails', '4.2.4'
 gem 'pg'
 gem 'foreigner'
 
+#Custom JSON serialization
+gem 'active_model_serializers'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
