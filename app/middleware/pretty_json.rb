@@ -15,10 +15,10 @@ class PrettyJson
   end
 
   def body
-    @pretty_str
+    @pretty_str.to_s
   end
 
   def each(&block)
-      block.call(@pretty_str)
+      block.call(body)
   end
 end

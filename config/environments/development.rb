@@ -42,4 +42,4 @@ Rails.application.configure do
 
 end
 
-  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+  Rails.application.routes.default_url_options[:host] = 'home.lesnarbonne.fr:3000'

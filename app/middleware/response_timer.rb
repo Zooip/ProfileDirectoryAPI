@@ -30,11 +30,11 @@ class ResponseTimer
   end
 
   def body
-    @res_body
+    @res_body.to_s
   end
 
   def each(&block)
-    block.call(@res_body)
+    block.call(body)
   end
 
 

@@ -10,7 +10,9 @@ gem 'pg'
 gem 'foreigner'
 
 #Custom JSON serialization
-gem 'active_model_serializers'
+gem 'active_model_serializers', :git => 'https://github.com/rails-api/active_model_serializers', :branch => 'master'
+
+gem 'will_paginate', '~> 3.0.6'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
