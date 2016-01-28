@@ -1,5 +1,9 @@
 class Api::V2::BaseController < ApplicationController
+  
+  include Rails.application.routes.url_helpers
+  
   before_action :set_debug_headers
+  serialization_scope :serializer_scope
 
   private
 
@@ -9,20 +13,29 @@ class Api::V2::BaseController < ApplicationController
     end
 
     def filter_params
-      params.fetch(:filter, {}).permit(filter_attributes << :id).transform_values { |v| v.split(',') }
+      params.fetch(:filter, {}).permit(filter_attributes << :id).transform_values { |v| v.to_s.split(',') }
     end
 
     def filter_attributes
-      serializer = "Gram::#{controller_name.titlecase.singularize}Serializer"
+      serializer = "Gram::#{controller_name.titlecase.singularize.remove(' ')}Serializer"
       serializer.constantize._attributes
     end
 
     def fields_params
-      params.fetch(:fields,{}).permit(:gram_profiles).transform_values { |v| v.split(',') }
+      fields=params.fetch(:fields,{}).transform_values { |v| v.to_s.split(',') }
+
+    end
+
+    def include_params
+      fields=params.fetch(:include,'').split(',').map{|v| v.to_s.remove('gram_')}
     end
 
     def set_debug_headers
       response.headers['X-Debug-Time'] = 'true'
+    end
+
+    def serializer_scope
+       fields=params.fetch(:scope,{admin:false})
     end
 
 end

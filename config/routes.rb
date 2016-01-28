@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   namespace :api, constraints: { format: 'json' } do
     namespace :v2 do
       resources :profiles, :defaults => { :format => :json }      
+      resources :connection_aliases, :defaults => { :format => :json }      
     end
   end
 

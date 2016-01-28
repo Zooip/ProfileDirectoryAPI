@@ -5,14 +5,14 @@ class Api::V2::ProfilesController < Api::V2::BaseController
 
   # GET /gram/profiles.json
   def index
-    @gram_profiles = Gram::Profile.where(filter_params).paginate(page_params)
-    render json: @gram_profiles, fields: fields_params
+    @gram_profiles = Gram::Profile.where(filter_params).includes(include_params).paginate(page_params)
+    render json: @gram_profiles, fields: fields_params, include: include_params, links: { create: Rails.application.routes.url_helpers.api_v2_profiles_url}
   end
 
 
   # GET /gram/profiles/1.json
   def show
-    render json: @gram_profile, fields: fields_params # links:{self: "coucou"}
+    render json: @gram_profile, fields: fields_params, include: include_params
   end
 
   # POST /gram/profiles.json

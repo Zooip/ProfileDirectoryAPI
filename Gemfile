@@ -45,6 +45,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'database_cleaner'
   gem 'byebug'
+  gem 'better_errors'
   gem 'rspec-rails'
   gem 'shoulda-matchers', '~> 3.0'
   gem 'factory_girl_rails'

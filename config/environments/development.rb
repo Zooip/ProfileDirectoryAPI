@@ -43,3 +43,4 @@ Rails.application.configure do
 end
 
   Rails.application.routes.default_url_options[:host] = 'home.lesnarbonne.fr:3000'
+  BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
