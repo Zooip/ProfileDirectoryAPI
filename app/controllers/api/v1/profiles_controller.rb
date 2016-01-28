@@ -1,4 +1,4 @@
-class Api::V2::ProfilesController < Api::V2::BaseController
+class Api::V1::ProfilesController < Api::V1::BaseController
   before_action :set_gram_profile, only: [:show, :update, :destroy]
   before_action :set_debug_headers
 
@@ -6,7 +6,7 @@ class Api::V2::ProfilesController < Api::V2::BaseController
   # GET /gram/profiles.json
   def index
     @gram_profiles = Gram::Profile.where(filter_params).includes(include_params).paginate(page_params)
-    render json: @gram_profiles, fields: fields_params, include: include_params, links: { create: Rails.application.routes.url_helpers.api_v2_profiles_url}
+    render json: @gram_profiles, fields: fields_params, include: include_params, links: { create: Rails.application.routes.url_helpers.api_v1_profiles_url}
   end
 
 
@@ -21,7 +21,7 @@ class Api::V2::ProfilesController < Api::V2::BaseController
 
     respond_to do |format|
       if @gram_profile.save
-        format.json { render :show, status: :created, location: api_v2_profile_url(@gram_profile) }
+        format.json { render :show, status: :created, location: api_v1_profile_url(@gram_profile) }
       else
         format.json { render json: @gram_profile.errors, status: :unprocessable_entity }
       end
@@ -33,7 +33,7 @@ class Api::V2::ProfilesController < Api::V2::BaseController
   def update
     respond_to do |format|
       if @gram_profile.update(gram_profile_params)
-        format.json { render :show, status: :ok, location: api_v2_profile_url(@gram_profile) }
+        format.json { render :show, status: :ok, location: api_v1_profile_url(@gram_profile) }
       else
         format.json { render json: @gram_profile.errors, status: :unprocessable_entity }
       end

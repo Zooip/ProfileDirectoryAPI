@@ -1,4 +1,4 @@
-class Api::V2::ConnectionAliasesController < Api::V2::BaseController
+class Api::V1::ConnectionAliasesController < Api::V1::BaseController
   before_action :set_gram_connection_alias, only: [:show, :update, :destroy]
   before_action :set_debug_headers
 
@@ -21,7 +21,7 @@ class Api::V2::ConnectionAliasesController < Api::V2::BaseController
 
     respond_to do |format|
       if @gram_connection_alias.save
-        format.json { render :show, status: :created, location: api_v2_connection_alias_url(@gram_connection_alias) }
+        format.json { render :show, status: :created, location: api_v1_connection_alias_url(@gram_connection_alias) }
       else
         format.json { render json: @gram_connection_alias.errors, status: :unprocessable_entity }
       end
@@ -33,7 +33,7 @@ class Api::V2::ConnectionAliasesController < Api::V2::BaseController
   def update
     respond_to do |format|
       if @gram_connection_alias.update(gram_connection_alias_params)
-        format.json { render :show, status: :ok, location: api_v2_connection_alias_url(@gram_connection_alias) }
+        format.json { render :show, status: :ok, location: api_v1_connection_alias_url(@gram_connection_alias) }
       else
         format.json { render json: @gram_connection_alias.errors, status: :unprocessable_entity }
       end

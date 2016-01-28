@@ -1,4 +1,4 @@
-class Api::V2::BaseController < ApplicationController
+class Api::V1::BaseController < ApplicationController
   
   include Rails.application.routes.url_helpers
   

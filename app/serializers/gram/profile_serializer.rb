@@ -11,7 +11,7 @@ class Gram::ProfileSerializer < ActiveModel::Serializer
   end
 
   def _links
-    {self: api_v2_profile_url(object)}
+    {self: api_v1_profile_url(object)}
   end
 
   # def included

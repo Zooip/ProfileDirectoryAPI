@@ -23,6 +23,7 @@ class Gram::Profile < Gram::Base
 
   ## RELATIONS ############################
   has_many :connection_aliases, dependent: :destroy
+  has_one :user_mockup
 
   ## VALIDATIONS ##########################  
   validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}
@@ -50,6 +51,10 @@ class Gram::Profile < Gram::Base
   end
 
   ## PUBLIC CLASS METHODS #################
+
+  def self.find_by_connection_alias(value)
+    Gram::ConnectionAlias.find_by_connection_alias(value).profile
+  end
   
 
   private

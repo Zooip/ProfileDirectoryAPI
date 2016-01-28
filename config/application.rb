@@ -37,9 +37,9 @@ module GramV2
     end
 
 
-    config.middleware.use "PrettyJson"
-    config.middleware.use "ResponseTimer"
-    config.middleware.use "CatchJsonParseErrors"
+    #config.middleware.use "PrettyJson"
+    #config.middleware.use "ResponseTimer"
+    #config.middleware.use "CatchJsonParseErrors"
 
   end
 end

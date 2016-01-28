@@ -4,6 +4,6 @@ class Gram::ConnectionAliasSerializer < ActiveModel::Serializer
   belongs_to :profile
 
   def _links
-    {self: api_v2_connection_alias_url(object)}
+    {self: api_v1_connection_alias_url(object)}
   end
 end

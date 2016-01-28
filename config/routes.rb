@@ -1,17 +1,23 @@
 Rails.application.routes.draw do
+  get 'home/home'
+
+  #use_doorkeeper
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
+  match 'login', to: 'user_sessions#new', via: [:get], as: :user_sessions
+  match 'login', to: 'user_sessions#create', via: [:post]
+  match 'logout', to: 'user_sessions#destroy', via: [:get,:delete]
 
   namespace :api, constraints: { format: 'json' } do
-    namespace :v2 do
+    namespace :v1 do
       resources :profiles, :defaults => { :format => :json }      
       resources :connection_aliases, :defaults => { :format => :json }      
     end
   end
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+   root 'home#home'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
