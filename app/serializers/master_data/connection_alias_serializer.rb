@@ -4,6 +4,6 @@ class MasterData::ConnectionAliasSerializer < ActiveModel::Serializer
   belongs_to :profile
 
   def _links
-    {self: api_v1_connection_alias_url(object)}
+    {self: api_v1_connection_alias_url(object, format: :json)}
   end
 end

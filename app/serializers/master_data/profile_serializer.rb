@@ -11,7 +11,7 @@ class MasterData::ProfileSerializer < ActiveModel::Serializer
   end
 
   def _links
-    {self: api_v1_profile_url(object)}
+    {self: api_v1_profile_url(object, format: :json)}
   end
 
   # def included

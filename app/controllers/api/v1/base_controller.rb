@@ -39,4 +39,20 @@ class Api::V1::BaseController < ApplicationController
        fields=params.fetch(:scope,{admin:false})
     end
 
+    def verify_type(type)
+      type_params=params.require(:data).require(:type)
+      unless type_params == type.to_s
+        return render status: :conflict,json: {
+            errors:[
+              { code: '409 Conflict',
+                title: 'Wrong Resource type',
+                detail: 'You didn\'t specified Resource type in your request body or this type is invalid with this end-point',
+                meta:{
+                  allowed_type: type.to_s
+                }
+               }]
+            }        
+      end
+    end
+
 end
