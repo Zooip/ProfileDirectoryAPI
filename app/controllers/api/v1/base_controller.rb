@@ -36,7 +36,10 @@ class Api::V1::BaseController < ApplicationController
     end
 
     def serializer_scope
-       fields=params.fetch(:scope,{admin:false})
+      serializer_scope_hash={}
+      serializer_scope_hash[:oauth_scopes]=current_oauth_scopes
+      serializer_scope_hash[:oauth_ressource_owner]=current_user
+      serializer_scope_hash[:oauth_application]=current_oauth_application
     end
 
     def verify_type(type)
@@ -51,7 +54,7 @@ class Api::V1::BaseController < ApplicationController
                   allowed_type: type.to_s
                 }
                }]
-            }        
+            }
       end
     end
 

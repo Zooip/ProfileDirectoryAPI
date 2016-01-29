@@ -31,8 +31,12 @@ module Oauthable
   end
 
   # Get the scopes granted by current access token
-  def current_scopes
+  def current_oauth_scopes
     doorkeeper_token.scopes if doorkeeper_token
+  end
+
+  def current_oauth_application
+    doorkeeper_token.application if doorkeeper_token
   end
 
   def doorkeeper_unauthorized_render_options(error: nil)
