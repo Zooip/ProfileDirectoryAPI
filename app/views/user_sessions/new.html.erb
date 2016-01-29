@@ -15,5 +15,6 @@
   <%= f.label :password %><br />
   <%= f.password_field :password %><br />
   <br />
+  <%= hidden_field_tag :redirect, @redirect_url %>
   <%= f.submit "Login" %>
 <% end %>
