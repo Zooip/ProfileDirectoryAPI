@@ -1,4 +1,4 @@
-class Gram::ConnectionAlias < Gram::Base
+class MasterData::ConnectionAlias < MasterData::Base
   belongs_to :profile
 
   validates :profile, presence: true

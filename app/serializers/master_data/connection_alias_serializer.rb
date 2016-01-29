@@ -1,4 +1,4 @@
-class Gram::ConnectionAliasSerializer < ActiveModel::Serializer
+class MasterData::ConnectionAliasSerializer < ActiveModel::Serializer
   type 'connection_aliases'
   attributes :id, :connection_alias
   belongs_to :profile

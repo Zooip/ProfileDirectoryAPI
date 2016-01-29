@@ -1,4 +1,4 @@
-module Gram
+module MasterData
   def self.table_name_prefix
     ''
   end

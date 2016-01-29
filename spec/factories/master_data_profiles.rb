@@ -1,6 +1,6 @@
 Faker::Config.locale = 'fr'
 FactoryGirl.define do
-  factory :gram_profile, :class => 'Gram::Profile' do
+  factory :master_data_profile, :class => 'MasterData::Profile' do
     enable                  {[true,false].sample}
     encrypted_password      "no password"
     birth_date              { [Faker::Date.between(20.years.ago, 90.years.ago),nil].sample }
@@ -13,7 +13,7 @@ FactoryGirl.define do
     gender                  { ['male','female',nil].sample}
 
 
-    factory :invalid_gram_profile do
+    factory :invalid_master_data_profile do
       email nil
     end
 

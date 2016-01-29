@@ -19,7 +19,7 @@
 # To create additional roles in postgres see `$ createuser --help`.
 # When left blank, postgres will use the default role. This is
 # the same name as the operating system user that initialized the database.
-#username: gram_v2
+#username: master_data_v2
 
 # The password associated with the postgres role (username).
 #password:
@@ -76,7 +76,7 @@ default: &default
   schema_search_path: "public"
 
 
-gram_db:
+master_data_db:
   development:
     <<: *default
     database: gram_dev
@@ -94,7 +94,7 @@ gram_db:
     <<: *default
     database: gram_prod
     username: gram_prod
-    password: <%= ENV['GRAM_DATABASE_PASSWORD'] %>
+    password: <%= ENV['MASTER_DATA_DATABASE_PASSWORD'] %>
 
 development:
   <<: *default
@@ -113,4 +113,4 @@ production:
   <<: *default
   database: gram_api_prod
   username: gram_api_prod
-  password: <%= ENV['GRAM_DATABASE_PASSWORD'] %>
+  password: <%= ENV['MASTER_DATA_DATABASE_PASSWORD'] %>

@@ -47,19 +47,19 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner[:active_record,{model: Gram::Profile}].strategy = :transaction
+    DatabaseCleaner[:active_record,{model: MasterData::Profile}].strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
-    DatabaseCleaner[:active_record,{model: Gram::Profile}].clean_with(:truncation)
+    DatabaseCleaner[:active_record,{model: MasterData::Profile}].clean_with(:truncation)
   end
 
   config.before(:each) do
     DatabaseCleaner.start
-    DatabaseCleaner[:active_record,{model: Gram::Profile}].start
+    DatabaseCleaner[:active_record,{model: MasterData::Profile}].start
   end
 
   config.after(:each) do
     DatabaseCleaner.clean
-    DatabaseCleaner[:active_record,{model: Gram::Profile}].clean
+    DatabaseCleaner[:active_record,{model: MasterData::Profile}].clean
   end
 
 

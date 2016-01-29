@@ -1,6 +1,6 @@
 class UserMockup < ActiveRecord::Base
 
-  belongs_to :profile, class_name: 'Gram::Profile'
+  belongs_to :profile, class_name: 'MasterData::Profile'
 
   attr_accessor :password
 
@@ -17,6 +17,6 @@ class UserMockup < ActiveRecord::Base
   end
 
   def self.find_by_connection_alias(value)
-    Gram::Profile.find_by_connection_alias(value).user_mockup || Gram::Profile.find_by_connection_alias(value).create_user_mockup!
+    MasterData::Profile.find_by_connection_alias(value).user_mockup || MasterData::Profile.find_by_connection_alias(value).create_user_mockup!
   end
 end

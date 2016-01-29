@@ -1,4 +1,4 @@
-class CreateGramAccountAliases < ActiveRecord::Migration
+class CreateMasterDataAccountAliases < ActiveRecord::Migration
   def change
     create_table :connection_aliases do |t|
       t.references :profile, foreign_key: true, null: false

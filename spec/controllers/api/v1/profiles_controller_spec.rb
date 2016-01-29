@@ -21,14 +21,14 @@ require 'rails_helper'
 RSpec.describe Api::V1::ProfilesController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
-  # Gram::Profile. As you add validations to Gram::Profile, be sure to
+  # MasterData::Profile. As you add validations to MasterData::Profile, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    FactoryGirl.attributes_for(:gram_profile, first_name:"Jean")
+    FactoryGirl.attributes_for(:master_data_profile, first_name:"Jean")
   }
 
   let(:invalid_attributes) {
-    FactoryGirl.attributes_for(:invalid_gram_profile)
+    FactoryGirl.attributes_for(:invalid_master_data_profile)
   }
 
   # This should return the minimal set of values that should be in the session
@@ -37,34 +37,34 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
-    it "assigns all gram_profiles as @gram_profiles" do
-      profile = Gram::Profile.create! valid_attributes
+    it "assigns all master_data_profiles as @master_data_profiles" do
+      profile = MasterData::Profile.create! valid_attributes
       get :index, {format: :json,}, valid_session
-      expect(assigns(:gram_profiles)).to eq([profile])
+      expect(assigns(:master_data_profiles)).to eq([profile])
     end
   end
 
   describe "GET #show" do
     it "assigns the requested api_profile as @api_profile" do
-      profile = Gram::Profile.create! valid_attributes
+      profile = MasterData::Profile.create! valid_attributes
       get :show, {format: :json,:id => profile.id}, valid_session
-      expect(assigns(:gram_profile)).to eq(profile)
+      expect(assigns(:master_data_profile)).to eq(profile)
     end
   end
 
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Gram::Profile" do
+      it "creates a new MasterData::Profile" do
         expect {
           post :create, {format: :json,:profile => valid_attributes}, valid_session
-        }.to change(Gram::Profile, :count).by(1)
+        }.to change(MasterData::Profile, :count).by(1)
       end
 
       it "assigns a newly created api_profile as @api_profile" do
         post :create, {format: :json,:profile => valid_attributes}, valid_session
-        expect(assigns(:gram_profile)).to be_a(Gram::Profile)
-        expect(assigns(:gram_profile)).to be_persisted
+        expect(assigns(:master_data_profile)).to be_a(MasterData::Profile)
+        expect(assigns(:master_data_profile)).to be_persisted
       end
 
       it do
@@ -85,24 +85,24 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        FactoryGirl.attributes_for(:gram_profile, first_name:"Jacques")
+        FactoryGirl.attributes_for(:master_data_profile, first_name:"Jacques")
       }
 
       it "updates the requested api_profile" do
-        profile = Gram::Profile.create! valid_attributes
+        profile = MasterData::Profile.create! valid_attributes
         put :update, {format: :json,:id => profile.to_param, :profile => new_attributes}, valid_session
         profile.reload
         expect(profile.first_name).to eq('Jacques')
       end
 
       it "assigns the requested api_profile as @api_profile" do
-        profile = Gram::Profile.create! valid_attributes
+        profile = MasterData::Profile.create! valid_attributes
         put :update, {format: :json,:id => profile.to_param, :profile => valid_attributes}, valid_session
-        expect(assigns(:gram_profile)).to eq(profile)
+        expect(assigns(:master_data_profile)).to eq(profile)
       end
 
       it do
-        profile = Gram::Profile.create! valid_attributes
+        profile = MasterData::Profile.create! valid_attributes
         put :update, {format: :json,:id => profile.to_param, :profile => valid_attributes}, valid_session
         is_expected.to respond_with(:ok)
       end
@@ -110,7 +110,7 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
 
     context "with invalid params" do
       it do
-        profile = Gram::Profile.create! valid_attributes
+        profile = MasterData::Profile.create! valid_attributes
         put :update, {format: :json,:id => profile.to_param, :profile => invalid_attributes}, valid_session
         is_expected.to respond_with(:unprocessable_entity)
       end
@@ -119,14 +119,14 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested api_profile" do
-      profile = Gram::Profile.create! valid_attributes
+      profile = MasterData::Profile.create! valid_attributes
       expect {
         delete :destroy, {format: :json,:id => profile.to_param}, valid_session
-      }.to change(Gram::Profile, :count).by(-1)
+      }.to change(MasterData::Profile, :count).by(-1)
     end
 
     it do
-      profile = Gram::Profile.create! valid_attributes
+      profile = MasterData::Profile.create! valid_attributes
       delete :destroy, {format: :json,:id => profile.to_param}, valid_session
       is_expected.to respond_with(:no_content)
     end

@@ -17,7 +17,7 @@ class Api::V1::BaseController < ApplicationController
     end
 
     def filter_attributes
-      serializer = "Gram::#{controller_name.titlecase.singularize.remove(' ')}Serializer"
+      serializer = "MasterData::#{controller_name.titlecase.singularize.remove(' ')}Serializer"
       serializer.constantize._attributes
     end
 
@@ -27,7 +27,7 @@ class Api::V1::BaseController < ApplicationController
     end
 
     def include_params
-      fields=params.fetch(:include,'').split(',').map{|v| v.to_s.remove('gram_')}
+      fields=params.fetch(:include,'').split(',')
     end
 
     def set_debug_headers

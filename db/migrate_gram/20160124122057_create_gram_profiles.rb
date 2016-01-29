@@ -1,4 +1,4 @@
-class CreateGramProfiles < ActiveRecord::Migration
+class CreateMasterDataProfiles < ActiveRecord::Migration
   def self.up
     create_table :profiles do |t|
       t.integer :soce_id, :unique => true, :unsigned => true

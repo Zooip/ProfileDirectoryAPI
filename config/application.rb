@@ -8,7 +8,7 @@ Bundler.require(*Rails.groups)
 
 
 
-module GramV2
+module MasterDataV2
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -46,5 +46,5 @@ end
 
 db_conf = YAML::load(File.open(File.join(Rails.root,'config','database.yml')))
 
-GRAM_DB_CONF = db_conf["gram_db"][Rails.env]
+MASTER_DATA_DB_CONF = db_conf["master_data_db"][Rails.env]
 API_DB_CONF = db_conf[Rails.env]

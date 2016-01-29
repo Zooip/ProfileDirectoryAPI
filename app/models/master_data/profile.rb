@@ -1,4 +1,4 @@
-class Gram::Profile < Gram::Base
+class MasterData::Profile < MasterData::Base
 
   ## ATTRIBUTES ###########################
   # id: integer
@@ -47,13 +47,13 @@ class Gram::Profile < Gram::Base
 
   ## PUBLIC INSTANCE METHODS ##############
   def create_default_account_aliases
-    Gram::ConnectionAlias.create_default_aliases_for self
+    MasterData::ConnectionAlias.create_default_aliases_for self
   end
 
   ## PUBLIC CLASS METHODS #################
 
   def self.find_by_connection_alias(value)
-    Gram::ConnectionAlias.find_by_connection_alias(value).profile
+    MasterData::ConnectionAlias.find_by_connection_alias(value).profile
   end
   
 
