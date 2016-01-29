@@ -24,7 +24,7 @@ class UserSessionsController < ApiEngineBaseController
   end
 
   def redirect_params
-    redirect_regex = /^(?!http(s)?:\/\/).+/.match(params.fetch(:redirect,nil)).to_s
+    redirect_regex = /\A(?!http(s)?:\/\/).+/.match(params.fetch(:redirect,nil)).to_s
   end
 
 end
