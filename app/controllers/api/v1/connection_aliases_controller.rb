@@ -1,4 +1,6 @@
 class Api::V1::ConnectionAliasesController < Api::V1::BaseController
+  include Oauthable
+  
   before_action :set_master_data_connection_alias, only: [:show, :update, :destroy]
   before_action :set_debug_headers
 

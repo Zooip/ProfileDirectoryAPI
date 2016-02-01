@@ -19,6 +19,26 @@ module Oauthable
       def self.oauth_scopes_directory
         @oauth_scopes_directory ||= {}
       end
+
+      def self.scopes_attributes hash
+        @scopes_to_attributes = self.scopes_to_attributes.merge( hash ){|k, old_v, new_v| old_v + new_v}
+      end
+
+      def self.scopes_to_attributes
+        @scopes_to_attributes ||= {}
+      end
+
+      def authorized_read_fields
+        current_oauth_scopes.map{|s| (self.class.scopes_to_attributes[s]&&self.class.scopes_to_attributes[s][:read])||Hash.new  }.inject({}){|memo, el| memo.merge( el||{} ){|k, old_v, new_v| old_v + new_v}}
+      end
+
+      def authorized_write_fields
+        current_oauth_scopes.map{|s| (self.class.scopes_to_attributes[s]&&self.class.scopes_to_attributes[s][:write])||Hash.new }.inject({}){|memo, el| memo.merge( el||{} ){|k, old_v, new_v| old_v + new_v}}
+      end
+
+      def serializer_fields
+        authorized_read_fields.merge( fields_params ){|k, old_v, new_v| old_v + new_v}  if fields_params
+      end
   end
 
   def requested_action

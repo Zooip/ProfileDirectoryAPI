@@ -1,4 +1,4 @@
-module Helpers
+module ControllerHelpers
   RSpec.shared_context "valid Oauth context", :valid_oauth do
     let!(:scopes) { '' }
     let!(:resource_owner_profile) {FactoryGirl.create(:master_data_profile)}

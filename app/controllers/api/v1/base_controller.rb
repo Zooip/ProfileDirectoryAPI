@@ -14,7 +14,7 @@ class Api::V1::BaseController < ApplicationController
     end
 
     def filter_params
-      params.fetch(:filter, {}).permit(filter_attributes << :id).transform_values { |v| v.to_s.split(',') }
+      params.fetch(:filter, {}).permit(filter_attributes << :id).transform_values { |v| v.to_s.split(',').map{|v| v.to_sym} }
     end
 
     def filter_attributes
@@ -23,7 +23,7 @@ class Api::V1::BaseController < ApplicationController
     end
 
     def fields_params
-      fields=params.fetch(:fields,{}).transform_values { |v| v.to_s.split(',') }
+      fields=params.fetch(:fields,{}).transform_values { |v| v.to_s.split(',').map{|v| v.to_sym} }
 
     end
 
