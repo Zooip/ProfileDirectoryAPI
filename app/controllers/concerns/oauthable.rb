@@ -37,7 +37,11 @@ module Oauthable
       end
 
       def serializer_fields
-        authorized_read_fields.merge( fields_params ){|k, old_v, new_v| old_v + new_v}  if fields_params
+        if current_oauth_scopes.include?('scopes.admin')
+          fields_params
+        else
+          authorized_read_fields.merge( fields_params ){|k, old_v, new_v| old_v + new_v}  if fields_params
+        end
       end
   end
 

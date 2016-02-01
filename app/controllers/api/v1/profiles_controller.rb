@@ -13,6 +13,7 @@ class Api::V1::ProfilesController < Api::V1::BaseController
   before_action only: [:create, :update] do 
     verify_type 'profiles'
   end
+
   
   # GET /api/v1/profiles.json
   scopes :index, 'scopes.profiles', 'scopes.profiles.readonly', 'scopes.admin'
@@ -70,5 +71,3 @@ class Api::V1::ProfilesController < Api::V1::BaseController
     end
 
 end
-
-
