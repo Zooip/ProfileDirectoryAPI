@@ -27,7 +27,7 @@ module Oauthable
 
   # Find the user that owns the access token
   def current_user
-    User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token && doorkeeper_token.resource_owner_id
+    UserMockup.find(doorkeeper_token.resource_owner_id) if doorkeeper_token && doorkeeper_token.resource_owner_id
   end
 
   # Get the scopes granted by current access token

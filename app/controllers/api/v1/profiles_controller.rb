@@ -47,7 +47,7 @@ class Api::V1::ProfilesController < Api::V1::BaseController
 
   # DELETE /api/v1/profiles/1
   # DELETE /api/v1/profiles/1.json
-  scopes :delete, 'scopes.profiles'
+  scopes :destroy, 'scopes.profiles'
   def destroy
     @profile.destroy
     respond_to do |format|

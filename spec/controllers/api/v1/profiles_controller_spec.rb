@@ -20,6 +20,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::ProfilesController, type: :controller do
 
+
   # This should return the minimal set of attributes required to create a valid
   # MasterData::Profile. As you add validations to MasterData::Profile, be sure to
   # adjust the attributes here as well.
@@ -27,109 +28,158 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
     FactoryGirl.attributes_for(:master_data_profile, first_name:"Jean")
   }
 
-  let(:invalid_attributes) {
-    FactoryGirl.attributes_for(:invalid_master_data_profile)
+  let(:valid_json_attributes) {
+    FactoryGirl.json_api_attributes_for(:master_data_profile, first_name:"Jean")
   }
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # Api::ProfilesController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:invalid_json_attributes) {
+    FactoryGirl.json_api_attributes_for(:invalid_master_data_profile)
+  }
+
+  include Helpers
+
+  it_behaves_like 'a scopable Controller'
 
   describe "GET #index" do
-    it "assigns all master_data_profiles as @master_data_profiles" do
-      profile = MasterData::Profile.create! valid_attributes
-      get :index, {format: :json,}, valid_session
-      expect(assigns(:master_data_profiles)).to eq([profile])
+    it_behaves_like 'a Oauth protected action', :get, :index, 'scopes.profiles'
+    context "as a valid scope", :valid_oauth do
+      let (:scopes){'scopes.profiles'}
+
+      before :each do
+        get :index, {format: :json,access_token: token.token}
+      end
+
+      it {is_expected.to respond_with(:success)}
+
+      it "assigns all master_data_profiles as @master_data_profiles" do
+        expect(assigns(:profiles)).to eq([resource_owner_profile])
+      end
     end
   end
 
   describe "GET #show" do
-    it "assigns the requested api_profile as @api_profile" do
-      profile = MasterData::Profile.create! valid_attributes
-      get :show, {format: :json,:id => profile.id}, valid_session
-      expect(assigns(:master_data_profile)).to eq(profile)
+
+    let(:profile) {FactoryGirl.create(:master_data_profile, id: 100)}
+
+    it_behaves_like 'a Oauth protected action', :get, :show, 'scopes.profiles' do
+      let (:action_params) {{format: :json,:id => profile.id}}
+    end
+
+    context "as a valid scope", :valid_oauth do
+      let (:scopes){'scopes.profiles'}
+
+      before :each do
+        get :show, {format: :json,access_token: token.token,:id => profile.id}
+      end
+
+      it {is_expected.to respond_with(:success)}
+
+      it "assigns the requested api_profile as @api_profile" do
+        expect(assigns(:profile)).to eq(profile)
+      end
     end
   end
 
 
   describe "POST #create" do
-    context "with valid params" do
-      it "creates a new MasterData::Profile" do
-        expect {
-          post :create, {format: :json,:profile => valid_attributes}, valid_session
-        }.to change(MasterData::Profile, :count).by(1)
-      end
 
-      it "assigns a newly created api_profile as @api_profile" do
-        post :create, {format: :json,:profile => valid_attributes}, valid_session
-        expect(assigns(:master_data_profile)).to be_a(MasterData::Profile)
-        expect(assigns(:master_data_profile)).to be_persisted
-      end
-
-      it do
-        post :create, {format: :json,:profile => valid_attributes}, valid_session
-        is_expected.to respond_with(:created)
-      end
+    it_behaves_like 'a Oauth protected action', :post, :create, 'scopes.profiles' do
+      let (:action_params) {{format: :json, :data => valid_json_attributes}}
     end
 
-    context "with invalid params" do
-      it do
-        post :create, {format: :json,:profile => invalid_attributes}, valid_session
-        is_expected.to respond_with(:unprocessable_entity)
+    context "as a valid scope", :valid_oauth do
+      let (:scopes){'scopes.profiles'}
+
+      context "with valid params" do
+        it "creates a new MasterData::Profile" do
+          expect {
+            post :create, {format: :json,access_token: token.token,:data => valid_json_attributes}
+          }.to change(MasterData::Profile, :count).by(1)
+        end
+
+        it "assigns a newly created api_profile as @api_profile" do
+          post :create, {format: :json,access_token: token.token,:data => valid_json_attributes}
+          expect(assigns(:profile)).to be_a(MasterData::Profile)
+          expect(assigns(:profile)).to be_persisted
+        end
+
+        it do
+          post :create, {format: :json,access_token: token.token,:data => valid_json_attributes}
+          is_expected.to respond_with(:created)
+        end
       end
 
+      context "with invalid params" do
+        it do
+          post :create, {format: :json,access_token: token.token,:data => invalid_json_attributes}
+          is_expected.to respond_with(:unprocessable_entity)
+        end
+
+      end
     end
   end
 
   describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        FactoryGirl.attributes_for(:master_data_profile, first_name:"Jacques")
-      }
 
-      it "updates the requested api_profile" do
-        profile = MasterData::Profile.create! valid_attributes
-        put :update, {format: :json,:id => profile.to_param, :profile => new_attributes}, valid_session
-        profile.reload
-        expect(profile.first_name).to eq('Jacques')
-      end
+    let(:profile) {MasterData::Profile.create! valid_attributes}
+    let(:new_attributes) {FactoryGirl.json_api_attributes_for(:master_data_profile, first_name:"Jacques")}
 
-      it "assigns the requested api_profile as @api_profile" do
-        profile = MasterData::Profile.create! valid_attributes
-        put :update, {format: :json,:id => profile.to_param, :profile => valid_attributes}, valid_session
-        expect(assigns(:master_data_profile)).to eq(profile)
-      end
-
-      it do
-        profile = MasterData::Profile.create! valid_attributes
-        put :update, {format: :json,:id => profile.to_param, :profile => valid_attributes}, valid_session
-        is_expected.to respond_with(:ok)
-      end
+    it_behaves_like 'a Oauth protected action', :put, :update, 'scopes.profiles' do
+      let (:action_params) {{format: :json,:id => profile.to_param, :data => new_attributes}}
     end
 
-    context "with invalid params" do
-      it do
-        profile = MasterData::Profile.create! valid_attributes
-        put :update, {format: :json,:id => profile.to_param, :profile => invalid_attributes}, valid_session
-        is_expected.to respond_with(:unprocessable_entity)
+    context "as a valid scope", :valid_oauth do
+      let (:scopes){'scopes.profiles'}
+
+      context "with valid params" do
+
+        before :each do
+          put :update, {format: :json,access_token: token.token,:id => profile.to_param, :data => new_attributes}
+        end
+
+        it "updates the requested api_profile" do
+          profile.reload
+          expect(profile.first_name).to eq('Jacques')
+        end
+
+        it "assigns the requested api_profile as @api_profile" do
+          profile.reload
+          expect(assigns(:profile)).to eq(profile)
+        end
+
+        it {is_expected.to respond_with(:ok)}
+      end
+
+      context "with invalid params" do
+        it do
+          put :update, {format: :json,access_token: token.token,:id => profile.to_param, :data => invalid_json_attributes}
+          is_expected.to respond_with(:unprocessable_entity)
+        end
       end
     end
   end
 
   describe "DELETE #destroy" do
-    it "destroys the requested api_profile" do
-      profile = MasterData::Profile.create! valid_attributes
-      expect {
-        delete :destroy, {format: :json,:id => profile.to_param}, valid_session
-      }.to change(MasterData::Profile, :count).by(-1)
+
+    let!(:profile) {MasterData::Profile.create! valid_attributes}    
+
+    it_behaves_like 'a Oauth protected action', :delete, :destroy, 'scopes.profiles' do
+      let (:action_params) {{format: :json,:id => profile.to_param}}
     end
 
-    it do
-      profile = MasterData::Profile.create! valid_attributes
-      delete :destroy, {format: :json,:id => profile.to_param}, valid_session
-      is_expected.to respond_with(:no_content)
+    context "as a valid scope", :valid_oauth do
+      let (:scopes){'scopes.profiles'}
+
+      it "destroys the requested api_profile" do
+        expect {
+          delete :destroy, {format: :json,access_token: token.token,:id => profile.to_param}
+        }.to change(MasterData::Profile, :count).by(-1)
+      end
+
+      it do
+        delete :destroy, {format: :json,access_token: token.token,:id => profile.to_param}
+        is_expected.to respond_with(:no_content)
+      end
     end
   end
-
 end

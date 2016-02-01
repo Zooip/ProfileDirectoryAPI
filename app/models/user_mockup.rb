@@ -1,5 +1,7 @@
 class UserMockup < ActiveRecord::Base
 
+  validates :profile_id, uniqueness: true, presence: true
+
   belongs_to :profile, class_name: 'MasterData::Profile'
 
   attr_accessor :password
