@@ -11,8 +11,14 @@ Rails.application.routes.draw do
 
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
-      resources :profiles, :defaults => { :format => :json }      
-      resources :connection_aliases, :defaults => { :format => :json }      
+      resources :profiles, :defaults => { :format => :json } do
+        resources :connection_aliases, :defaults => { :format => :json }      
+      end
+      resources :oauth_applications, :defaults => { :format => :json } do
+        member do
+          get 'reset_secret'
+        end
+      end
     end
   end
 

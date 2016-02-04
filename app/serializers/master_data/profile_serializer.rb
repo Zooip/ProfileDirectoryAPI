@@ -6,6 +6,7 @@ class MasterData::ProfileSerializer < ActiveModel::Serializer
   attributes :first_name, :last_name, :birth_last_name, :full_name, :email, :soce_id, :birth_date, :death_date
 
   has_many :connection_aliases
+  has_many :oauth_applications
 
   def full_name
     [object.first_name,object.last_name].compact.join(" ")

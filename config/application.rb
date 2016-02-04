@@ -38,8 +38,8 @@ module MasterDataV2
 
 
     #config.middleware.use "PrettyJson"
-    #config.middleware.use "ResponseTimer"
-    #config.middleware.use "CatchJsonParseErrors"
+    config.middleware.use "ResponseTimer"
+    config.middleware.use "CatchJsonParseErrors"
 
   end
 end

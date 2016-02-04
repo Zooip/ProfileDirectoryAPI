@@ -67,7 +67,7 @@ class Api::V1::ProfilesController < Api::V1::BaseController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def profile_params
-      params.require(:data).require(:attributes).permit(*authorized_write_fields)
+      params.require(:data).require(:attributes)#.permit(*authorized_write_fields)
     end
 
 end

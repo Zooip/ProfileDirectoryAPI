@@ -16,8 +16,9 @@ class ResponseTimer
     @stop = Time.now
     if @headers["Content-Type"] =~ /^application\/json/ and @headers["X-Debug-Time"] == "true"
       obj = JSON.parse(@response.body)
-      obj["debug"]||=Hash.new
-      obj["debug"]["execution_time"]="#{@stop-@start}"
+      obj["meta"]||=Hash.new
+      obj["meta"]["debug"]||=Hash.new
+      obj["meta"]["debug"]["execution_time"]="#{@stop-@start}"
       @res_body= obj.to_json
       @headers["Content-Length"] = Rack::Utils.bytesize(@res_body).to_s
     else

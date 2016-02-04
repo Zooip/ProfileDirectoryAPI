@@ -8,6 +8,18 @@ class Api::V1::BaseController < ApplicationController
 
   private
 
+    def self.set_serializer value
+      @serializer = value
+    end
+
+    def self.serializer
+      @serializer ||=  "MasterData::#{controller_name.titlecase.singularize.remove(' ')}Serializer".constantize
+    end
+
+    def serializer
+      self.class.serializer
+    end
+
     def page_params
       raw=params.fetch(:page, {}).permit(:number, :size)
       {page:raw[:number],per_page:raw[:size]}
@@ -18,8 +30,7 @@ class Api::V1::BaseController < ApplicationController
     end
 
     def filter_attributes
-      serializer = "MasterData::#{controller_name.titlecase.singularize.remove(' ')}Serializer"
-      serializer.constantize._attributes
+      serializer._attributes
     end
 
     def fields_params

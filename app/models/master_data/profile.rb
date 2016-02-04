@@ -24,6 +24,7 @@ class MasterData::Profile < MasterData::Base
   ## RELATIONS ############################
   has_many :connection_aliases, dependent: :destroy
   has_one :user_mockup
+  has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
   ## VALIDATIONS ##########################  
   validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}

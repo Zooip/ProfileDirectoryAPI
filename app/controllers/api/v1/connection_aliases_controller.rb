@@ -1,31 +1,32 @@
 class Api::V1::ConnectionAliasesController < Api::V1::BaseController
   include Oauthable
   
-  before_action :set_master_data_connection_alias, only: [:show, :update, :destroy]
+  before_action :set_profile
+  before_action :set_connection_alias, only: [:show, :update, :destroy]
   before_action :set_debug_headers
 
 
   # GET /master_data/connection_aliases.json
   def index
-    @master_data_connection_aliases = MasterData::ConnectionAlias.where(filter_params).paginate(page_params)
-    render json: @master_data_connection_aliases, fields: fields_params, include: include_params
+    @connection_aliases = @profile.connection_aliases.where(filter_params).paginate(page_params)
+    render json: @connection_aliases, fields: fields_params, include: include_params
   end
 
 
   # GET /master_data/connection_aliases/1.json
   def show
-    render json: @master_data_connection_alias, fields: fields_params, include: include_params
+    render json: @connection_alias, fields: fields_params, include: include_params
   end
 
   # POST /master_data/connection_aliases.json
   def create
-    @master_data_connection_alias = MasterData::ConnectionAlias.new(master_data_connection_alias_params)
+    @connection_alias = @profile.connection_aliases.new(master_data_connection_alias_params)
 
     respond_to do |format|
-      if @master_data_connection_alias.save
-        format.json { render :show, status: :created, location: api_v1_connection_alias_url(@master_data_connection_alias) }
+      if @connection_alias.save
+        format.json { render :show, status: :created, location: api_v1_connection_alias_url(@connection_alias) }
       else
-        format.json { render json: @master_data_connection_alias.errors, status: :unprocessable_entity }
+        format.json { render json: @connection_alias.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -34,10 +35,10 @@ class Api::V1::ConnectionAliasesController < Api::V1::BaseController
   # PATCH/PUT /master_data/connection_aliases/1.json
   def update
     respond_to do |format|
-      if @master_data_connection_alias.update(master_data_connection_alias_params)
-        format.json { render :show, status: :ok, location: api_v1_connection_alias_url(@master_data_connection_alias) }
+      if @connection_alias.update(master_data_connection_alias_params)
+        format.json { render :show, status: :ok, location: api_v1_connection_alias_url(@connection_alias) }
       else
-        format.json { render json: @master_data_connection_alias.errors, status: :unprocessable_entity }
+        format.json { render json: @connection_alias.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -45,7 +46,7 @@ class Api::V1::ConnectionAliasesController < Api::V1::BaseController
   # DELETE /master_data/connection_aliases/1
   # DELETE /master_data/connection_aliases/1.json
   def destroy
-    @master_data_connection_alias.destroy
+    @connection_alias.destroy
     respond_to do |format|
       format.json { head :no_content }
     end
@@ -53,8 +54,12 @@ class Api::V1::ConnectionAliasesController < Api::V1::BaseController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_master_data_connection_alias
-      @master_data_connection_alias = MasterData::ConnectionAlias.find(params[:id])
+    def set_connection_alias
+      @connection_alias = MasterData::ConnectionAlias.find(params[:id])
+    end
+
+    def set_profile
+      @connection_alias = MasterData::Profile.find(params[:profile_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
