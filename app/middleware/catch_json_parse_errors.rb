@@ -1,4 +1,6 @@
 class CatchJsonParseErrors
+
+
   def initialize(app)
     @app = app
   end
@@ -7,14 +9,14 @@ class CatchJsonParseErrors
     begin
       @app.call(env)
     rescue ActionDispatch::ParamsParser::ParseError => error
-      if env['HTTP_ACCEPT'] =~ /application\/json/
+      if env['HTTP_ACCEPT'] =~ /^application\/vnd\.api\+json/
         error_output = "There was a problem in the JSON you submitted: #{error}"
         return [
           400, { "Content-Type" => "application/json" },
-          [ { status: 400, error: error_output }.to_json ]
+          [ { errors:[{code: 400, title: 'Unprocessable JSON', detail: error_output}] }.to_json ]
         ]
       else
-        raise error
+       raise error
       end
     end
   end

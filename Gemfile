@@ -10,7 +10,8 @@ gem 'pg'
 gem 'foreigner'
 
 #Custom JSON serialization
-gem 'active_model_serializers', :git => 'https://github.com/rails-api/active_model_serializers', :branch => 'master'
+#gem 'active_model_serializers', :git => 'https://github.com/rails-api/active_model_serializers', :branch => 'master'
+gem 'jsonapi-resources'
 
 gem 'will_paginate', '~> 3.0.6'
 

@@ -14,7 +14,7 @@ class ResponseTimer
     @start = Time.now
     @status, @headers, @response = @app.call(env)
     @stop = Time.now
-    if @headers["Content-Type"] =~ /^application\/json/ and @headers["X-Debug-Time"] == "true"
+    if @headers["Content-Type"] =~ /^application\/vnd\.api\+json/ and @headers["X-Debug-Time"] == "true"
       obj = JSON.parse(@response.body)
       obj["meta"]||=Hash.new
       obj["meta"]["debug"]||=Hash.new

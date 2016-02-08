@@ -17,16 +17,16 @@ class Api::V1::ProfilesController < Api::V1::BaseController
   
   # GET /api/v1/profiles.json
   scopes :index, 'scopes.profiles', 'scopes.profiles.readonly', 'scopes.admin'
-  def index
-    @profiles = MasterData::Profile.where(filter_params).includes(include_params).paginate(page_params)
-    render json: @profiles, fields: serializer_fields, include: include_params
-  end
+  # def index
+  #   @profiles = MasterData::Profile.where(filter_params).includes(include_params).paginate(page_params)
+  #   render json: @profiles, fields: serializer_fields, include: include_params
+  # end
 
   # GET /api/v1/profiles/1.json
   scopes :show, 'scopes.profiles.basic.readwrite', 'scopes.profiles.basic.readonly', 'scopes.profiles.civility.readwrite', 'scopes.profiles.civility.readonly', 'scopes.admin'
-  def show
-    render json: @profile, fields: serializer_fields, include: include_params
-  end
+  # def show
+  #   render json: @profile, fields: serializer_fields, include: include_params
+  # end
 
   # POST /api/v1/profiles.json
   scopes :create, 'scopes.admin'

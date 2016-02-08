@@ -66,7 +66,8 @@ module Oauthable
   def doorkeeper_unauthorized_render_options(error: nil)
         { json: {
       errors:[
-        { code: '401 Unauthorized',
+        { status: '401 Unauthorized',
+          code: 401,
           title: 'No AccessToken provided',
           detail: 'This Ressource is protected with OAuth2 and require an AccesToken for authorisation',
           links:{
@@ -81,7 +82,8 @@ module Oauthable
   def doorkeeper_forbidden_render_options(error: nil)
     { json: {
       errors:[
-        { code: '403 Forbidden',
+        { status: '403 Forbidden',
+          code: 403,
           title: 'Invalid Scopes',
           detail: 'Your AccessToken\'s Scopes don\'t allow you to access this Ressource',
           meta:{

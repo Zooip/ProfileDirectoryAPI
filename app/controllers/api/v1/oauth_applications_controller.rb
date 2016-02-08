@@ -1,7 +1,7 @@
 class Api::V1::OauthApplicationsController < Api::V1::BaseController
   include Oauthable
   #scopes_attributes(
-  set_serializer Doorkeeper::ApplicationSerializer
+  #set_serializer Doorkeeper::ApplicationSerializer
 
   before_action :set_application, only: [:show, :update, :destroy, :reset_secret]
   before_action :set_debug_headers
@@ -12,16 +12,16 @@ class Api::V1::OauthApplicationsController < Api::V1::BaseController
   
   # GET /api/v1/profiles.json
   scopes :index, 'scopes.admin'
-  def index
-    @application = Doorkeeper::Application.where(filter_params).includes(include_params).paginate(page_params)
-    render json: @application, fields: serializer_fields, include: include_params
-  end
+  # def index
+  #   @application = Doorkeeper::Application.where(filter_params).includes(include_params).paginate(page_params)
+  #   render json: @application, fields: serializer_fields, include: include_params
+  # end
 
   # GET /api/v1/profiles/1.json
   scopes :show, 'scopes.admin'
-  def show
-    render json: @application, fields: serializer_fields, include: include_params
-  end
+  # def show
+  #   render json: @application, fields: serializer_fields, include: include_params
+  # end
 
   # POST /api/v1/profiles.json
   scopes :create, 'scopes.admin'

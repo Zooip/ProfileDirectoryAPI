@@ -1,10 +1,11 @@
 class Api::V1::BaseController < ApplicationController
   include Rails.application.routes.url_helpers
+  include JSONAPI::ActsAsResourceController
 
   @@oauth_scopes={}
   
   before_action :set_debug_headers
-  serialization_scope :serializer_scope
+  #serialization_scope :serializer_scope
 
   private
 
