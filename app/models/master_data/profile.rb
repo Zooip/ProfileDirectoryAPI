@@ -19,6 +19,7 @@ class MasterData::Profile < MasterData::Base
   # created_at: datetime
   # updated_at: datetime  
   attr_accessor :create_without_aliases
+  attr_accessor :password
 
 
   ## RELATIONS ############################
@@ -35,6 +36,7 @@ class MasterData::Profile < MasterData::Base
   ## CALLBACKS  ###########################  
   after_create :create_default_account_aliases, if: :with_aliases?
   before_save :sync_similar_attributes
+  before_save :encrypt_password
   before_validation(:on => :create) do 
     if attribute_present?(:soce_id)
       set_soce_id_seq_value_to_max
@@ -42,6 +44,8 @@ class MasterData::Profile < MasterData::Base
       self.soce_id = next_soce_id_seq_value
     end
   end
+
+
 
   after_initialize :set_init_values
   before_validation :set_default_values
@@ -85,6 +89,10 @@ class MasterData::Profile < MasterData::Base
 
     def set_soce_id_seq_value_to_max
       self.class.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, ["SELECT setval('soce_id_seq',(SELECT GREATEST((SELECT MAX(soce_id) FROM profiles),?)))",self.soce_id]))
+    end
+
+    def encrypt_password
+      self.encrypted_password = UserMockup.crypto_provider.encrypt(self.password) if self.password
     end
 
   ## PRIVATE CLASS METHODS ################

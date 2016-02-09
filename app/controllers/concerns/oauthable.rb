@@ -8,8 +8,13 @@ module Oauthable
     end
 
     private 
+
+      def self.admin_scope
+        'scopes.admin'
+      end
+
       def self.scopes action, *array
-        oauth_scopes_directory[action.to_sym]=array
+        oauth_scopes_directory[action.to_sym]=(array<<admin_scope).uniq
       end
 
       def scopes_for action
@@ -28,21 +33,7 @@ module Oauthable
         @scopes_to_attributes ||= {}
       end
 
-      def authorized_read_fields
-        current_oauth_scopes.map{|s| (self.class.scopes_to_attributes[s]&&self.class.scopes_to_attributes[s][:read])||Hash.new  }.inject({}){|memo, el| memo.merge( el||{} ){|k, old_v, new_v| old_v + new_v}}
-      end
-
-      def authorized_write_fields
-        current_oauth_scopes.map{|s| (self.class.scopes_to_attributes[s]&&self.class.scopes_to_attributes[s][:write])||Hash.new }.inject({}){|memo, el| memo.merge( el||{} ){|k, old_v, new_v| old_v + new_v}}
-      end
-
-      def serializer_fields
-        if current_oauth_scopes.include?('scopes.admin')
-          fields_params
-        else
-          authorized_read_fields.merge( fields_params ){|k, old_v, new_v| old_v + new_v}  if fields_params
-        end
-      end
+    
   end
 
   def requested_action

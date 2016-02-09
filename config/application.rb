@@ -36,10 +36,10 @@ module MasterDataV2
       g.fixture_replacement :factory_girl, :dir => "spec/factories"
     end
 
-    config.middleware.insert_before ActionDispatch::ParamsParser, "CatchJsonParseErrors"
+    #config.middleware.insert_before ActionDispatch::ParamsParser, "CatchJsonParseErrors"
 
     #config.middleware.use "PrettyJson"
-    config.middleware.use "ResponseTimer"
+    #config.middleware.use "ResponseTimer"
 
   end
 end

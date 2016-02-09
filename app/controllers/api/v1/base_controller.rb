@@ -2,6 +2,8 @@ class Api::V1::BaseController < ApplicationController
   include Rails.application.routes.url_helpers
   include JSONAPI::ActsAsResourceController
 
+  skip_before_action :verify_authenticity_token
+
   @@oauth_scopes={}
   
   before_action :set_debug_headers
