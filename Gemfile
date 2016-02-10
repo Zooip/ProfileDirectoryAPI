@@ -42,6 +42,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# MasterData helpers
+gem 'phone'
+
 #OAuth2.0
 gem 'doorkeeper'
 gem 'omniauth'

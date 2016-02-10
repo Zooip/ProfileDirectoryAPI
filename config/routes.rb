@@ -21,6 +21,10 @@ Rails.application.routes.draw do
           get 'reset_secret'
         end
       end
+      jsonapi_resources :phone_numbers do
+        jsonapi_relationships
+        #resources :connection_aliases 
+      end
     end
   end
 

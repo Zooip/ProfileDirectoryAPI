@@ -6,6 +6,7 @@ class Api::V1::ProfileResource < JSONAPI::Resource
   attributes :connection_aliases
 
   has_many :oauth_applications, class_name:'OauthApplication'
+  has_many :phone_numbers
 
   # Defines readable and writable attributes for each scopes.
   # Returns an hash asssociating scopes names with read/wrtie acess
@@ -39,11 +40,11 @@ class Api::V1::ProfileResource < JSONAPI::Resource
       read: [:id, :first_name, :last_name, :full_name, :gender],
     },
     'scopes.profile.phones.readonly' => {
-      read: [:phones],
+      read: [:phone_numbers],
     },
     'scopes.profile.phones.readwrite' => {
-      read: [:phones],
-      write: [:phones],
+      read: [:phone_numbers],
+      write: [:phone_numbers],
     },
     'scopes.profile.birth_date.readonly' => {
       read: [:birth_date],

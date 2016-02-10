@@ -118,6 +118,7 @@ GEM
       hashie (>= 1.2, < 3)
       rack
     pg (0.18.4)
+    phone (1.2.3)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -225,6 +226,7 @@ DEPENDENCIES
   omniauth
   omniauth-cas!
   pg
+  phone
   rails (= 4.2.4)
   rspec-rails
   sass-rails (~> 5.0)

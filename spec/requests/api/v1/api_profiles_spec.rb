@@ -53,8 +53,8 @@ RSpec.describe "Api::V1::Profiles", type: :request do
     end
 
     context "As an authentified Application with profiles.list", :valid_oauth do
-      let (:scopes){'scopes.profiles.list'}
-      
+      let (:scopes){'scopes.profiles.list.readonly'}
+
       it "it respond with sucess" do
         get api_v1_profiles_path,nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
         expect(response).to have_http_status(:success)
