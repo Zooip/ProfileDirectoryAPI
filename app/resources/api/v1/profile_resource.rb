@@ -21,15 +21,15 @@ class Api::V1::ProfileResource < JSONAPI::Resource
   #     },
   #   }
   #
-  ## TODO
+  # TODO
   # For now public attributes are hard coded. Would be better to allow User to
   # customize which attributes are public for them.
   #
-  ## TODO
+  # TODO
   # Public scope 'scopes.profile.public.readonly' is hard coded in
   # "allowed_fields_filter". Default scopes should be configurable
   #
-  ## TODO
+  # TODO
   # Admin scope 'scopes.admin' is hard coded in "allowed_fields_filter".
   # Admin scopes should be configurable
   #
@@ -68,7 +68,7 @@ class Api::V1::ProfileResource < JSONAPI::Resource
   def connection_aliases= array #TODO
   end
 
-  ## Attributes access rules ##########
+  # Attributes access rules ##########
 
   # Defines fields readable by clients
   # Write-only attributes are defined here
@@ -99,16 +99,16 @@ class Api::V1::ProfileResource < JSONAPI::Resource
 
   # Filter input fields based on access type and context
   # Params:
-  #   access   => :read or :write
-  #   _fields  => input fields to filter
-  #   context  => controller context
-  #               expect an hash containing keys [:current_oauth_scopes, :current_user]
-  #   resource => requested resource
+  # access::   :read or :write
+  # _fields::  Input fields to filter
+  # context::  Controller context.
+  #            Expect an hash containing keys [:current_oauth_scopes, :current_user]
+  # resource:: Requested resource
   #
   # Public fields are defined here
   # Admin scope is defined here
   #
-  ## TODO
+  # TODO
   # Find a way to pass @model for updatable and creatable fields
   def self.allowed_fields_filter(access,_fields,context={},resource= @model)
     # Check if the client has an admin scope
