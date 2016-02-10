@@ -4,7 +4,7 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-        # Put your resource owner authentication logic here.
+    # Put your resource owner authentication logic here.
     # Example implementation:
     (@current_user ||= (@current_user_session||= UserSession.find) && @current_user_session.user_mockup)||  redirect_to(user_sessions_url(redirect:request.fullpath))
   end
@@ -48,7 +48,7 @@ Doorkeeper.configure do
   # Define access token scopes for your provider
   # For more information go to
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
-  # default_scopes  :public
+  # default_scopes  'scopes.profile.public.readonly'
   # optional_scopes :write, :update
 
   # Change the way client credentials are retrieved from the request object.

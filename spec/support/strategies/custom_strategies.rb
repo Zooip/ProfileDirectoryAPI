@@ -7,7 +7,7 @@ class JsonApiAttributesForStrategy
 
   def result(evaluation)
     {
-      type: ActiveModel::Serializer.serializer_for(evaluation.object)._type,
+      type: JSONAPI::Resource.resource_for('api/v1/'+evaluation.object.class.model_name.element)._type,
       attributes:@strategy.result(evaluation)
     }
   end

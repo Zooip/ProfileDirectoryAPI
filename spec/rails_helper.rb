@@ -73,7 +73,3 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
-
-ActiveModelSerializers.config.schema_path = 'spec/support/schemas'
-
-$LOAD_PATH << File.expand_path("spec/serializers")

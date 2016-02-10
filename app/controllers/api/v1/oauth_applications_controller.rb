@@ -1,11 +1,8 @@
 class Api::V1::OauthApplicationsController < Api::V1::BaseController
   include Oauthable
-  #scopes_attributes(
-  #set_serializer Doorkeeper::ApplicationSerializer
 
   before_action :set_application, only: [:show, :update, :destroy, :reset_secret]
   before_action :set_debug_headers
-
 
   
   # GET /api/v1/profiles.json
