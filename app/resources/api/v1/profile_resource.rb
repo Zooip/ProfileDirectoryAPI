@@ -2,7 +2,7 @@ class Api::V1::ProfileResource < JSONAPI::Resource
   model_name 'MasterData::Profile'
   model_hint model: MasterData::Profile
 
-  attributes :soce_id,:email, :first_name, :last_name, :full_name, :gender, :birth_date, :encrypted_password, :password
+  attributes :soce_id, :email, :first_name, :last_name, :full_name, :gender, :birth_date, :encrypted_password, :password
   attributes :connection_aliases
 
   has_many :oauth_applications, class_name:'OauthApplication'
@@ -22,6 +22,8 @@ class Api::V1::ProfileResource < JSONAPI::Resource
   #     },
   #   }
   #
+  # Use :_all_fields as an alias for all declared attributes
+  #
   # TODO
   # For now public attributes are hard coded. Would be better to allow User to
   # customize which attributes are public for them.
@@ -37,7 +39,7 @@ class Api::V1::ProfileResource < JSONAPI::Resource
   def self.scopes_directory
   {
     'scopes.profile.public.readonly' => {
-      read: [:id, :first_name, :last_name, :full_name, :gender],
+      read: [:id,:email, :first_name, :last_name, :full_name, :gender],
     },
     'scopes.profile.phones.readonly' => {
       read: [:phone_numbers],
@@ -49,6 +51,10 @@ class Api::V1::ProfileResource < JSONAPI::Resource
     'scopes.profile.birth_date.readonly' => {
       read: [:birth_date],
       write: [],
+    },
+    'scopes.profiles.create' => {
+      apply_on: :collection,
+      write: [:_all_fields]
     }
   }
   end
@@ -121,12 +127,13 @@ class Api::V1::ProfileResource < JSONAPI::Resource
       allowed_fields=scopes_directory['scopes.profile.public.readonly'][access].to_a
 
       #Checks resource_owner rights over this resource
-      if context[:current_user] && context[:current_user].profile == resource
-        allowed_fields+=scopes_directory.values_at(*context[:current_oauth_scopes]).compact.map{|v| v[access]}.flatten.compact
+      scopes_directory.values_at(*context[:current_oauth_scopes]).compact.each do |h|
+        if ((h[:apply_on] == :collection) or (context[:current_user] && context[:current_user].profile == resource))
+          allowed_fields+=h[access].to_a.compact 
+        end
       end
-
       #Filter
-      _fields & allowed_fields
+      allowed_fields.include?(:_all_fields) ? _fields : _fields & allowed_fields
     end
   end
 

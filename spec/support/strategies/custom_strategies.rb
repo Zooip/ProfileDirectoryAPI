@@ -6,9 +6,11 @@ class JsonApiAttributesForStrategy
   # delegate :association, to: :@strategy
 
   def result(evaluation)
-    {
-      type: JSONAPI::Resource.resource_for('api/v1/'+evaluation.object.class.model_name.element)._type,
-      attributes:@strategy.result(evaluation)
+    {data:
+      {
+        type: JSONAPI::Resource.resource_for('api/v1/'+evaluation.object.class.model_name.element)._type,
+        attributes:@strategy.result(evaluation)
+      }
     }
   end
 end
