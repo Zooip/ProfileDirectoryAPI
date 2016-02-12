@@ -41,6 +41,10 @@ class Api::V1::ProfileResource < JSONAPI::Resource
     'scopes.profile.public.readonly' => {
       read: [:id,:email, :first_name, :last_name, :full_name, :gender],
     },
+    'scopes.profile.basic.readwrite' => {
+      read: [:id,:email, :first_name, :last_name, :full_name, :gender],
+      write: [:id,:email, :first_name, :last_name, :full_name, :gender],
+    },
     'scopes.profile.phones.readonly' => {
       read: [:phone_numbers],
     },

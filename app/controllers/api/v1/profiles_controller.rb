@@ -13,7 +13,7 @@ class Api::V1::ProfilesController < Api::V1::BaseController
   scopes :create, 'scopes.profiles.create'
 
   # PATCH/PUT /api/v1/profiles/1.json
-  scopes :update, 'scopes.profiles.basic.readwrite', 'scopes.profiles.civility.readwrite', 'scopes.profile.birth_date.readonly'
+  scopes :update, 'scopes.profile.basic.readwrite', 'scopes.profiles.civility.readwrite', 'scopes.profile.birth_date.readonly'
 
   # DELETE /api/v1/profiles/1.json
   scopes :destroy, 'scopes.profiles.delete'
