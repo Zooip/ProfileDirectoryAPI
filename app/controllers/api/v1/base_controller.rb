@@ -20,10 +20,18 @@ class Api::V1::BaseController < ApplicationController
     # Defines context for JSONAPI Resources
     def context
       {
+        current_resource: requested_resource, # This is a quick hack to enable use of attributes filtering on update in JSONAPI::Resource
         current_user: current_user,
         current_oauth_scopes: current_oauth_scopes,
         current_oauth_application: current_oauth_application,
       }
     end
-end
 
+    #Defines the resource requested by client
+    #To be overrided
+    #This is a quick hack to enable use of attributes filtering on update in JSONAPI::Resource
+    #TODO
+    def requested_resource
+      nil
+    end
+end

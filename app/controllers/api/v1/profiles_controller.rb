@@ -1,6 +1,10 @@
 class Api::V1::ProfilesController < Api::V1::BaseController
   include Oauthable
 
+  def requested_resource
+    params[:id] && MasterData::Profile.find(params[:id])
+  end
+
   before_action :set_debug_headers
   
   # GET /api/v1/profiles.json

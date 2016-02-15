@@ -4,30 +4,9 @@ include OauthHelpers
 
 RSpec.describe "Api::V1::Profiles", type: :request do
 
-  JSONAPI_HEADERS = {
-    "ACCEPT" => "application/vnd.api+json",
-    "CONTENT_TYPE" => "application/vnd.api+json"
-  }
-
   describe "GET /api/v1/profiles" do
-    context "As an unauthentified Application" do
-      it "ask for authentification" do
-        get api_v1_profiles_path,nil, JSONAPI_HEADERS
-        expect(response).to have_http_status(:unauthorized)
-      end
 
-      it "return an error" do
-        get api_v1_profiles_path,nil, JSONAPI_HEADERS
-        expect(JSON.parse(response.body).keys).to include("errors")
-      end
-    end
-
-    context "As an authentified Application with no scopes", :valid_oauth do
-      it "is forbidden" do
-        get api_v1_profiles_path,nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
-        expect(response).to have_http_status(:forbidden)
-      end
-    end
+    it_behaves_like 'a Oauth protected endpoint', :get, :api_v1_profiles_path,nil ,nil,JSONAPI_HEADERS
 
     context "As an authentified Application with admin scope", :valid_oauth do
       let (:scopes){'scopes.admin'}
@@ -37,9 +16,13 @@ RSpec.describe "Api::V1::Profiles", type: :request do
         expect(response).to have_http_status(:success)
       end
 
-      it "it return a list" do
+      it "it return a list of profiles" do
         get api_v1_profiles_path,nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
-        expect(JSON.parse(response.body)['data'].class).to eq(Array)
+        response_data=JSON.parse(response.body)['data']
+        expect(response_data.class).to eq(Array)
+        response_data.each do |oa|
+          expect(oa["type"]).to eq("profiles")
+        end
       end
 
       it "doesn't expose passwords" do
@@ -74,25 +57,7 @@ RSpec.describe "Api::V1::Profiles", type: :request do
 
     let!(:profile) { FactoryGirl.create(:master_data_profile) }
 
-
-    context "As an unauthentified Application" do
-      it "ask for authentification" do
-        get api_v1_profile_path(profile),nil, JSONAPI_HEADERS
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it "return an error" do
-        get api_v1_profile_path(profile),nil, JSONAPI_HEADERS
-        expect(JSON.parse(response.body).keys).to include("errors")
-      end
-    end
-
-    context "As an authentified Application with no scopes", :valid_oauth do
-      it "is forbidden" do
-        get api_v1_profile_path(profile),nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
-        expect(response).to have_http_status(:forbidden)
-      end
-    end
+    it_behaves_like 'a Oauth protected endpoint', :get, :api_v1_profile_path,100 ,nil,JSONAPI_HEADERS
 
     context "When requesting the resource owner's profile", :valid_oauth do
       let!(:resource_owner_profile) {profile}
@@ -244,25 +209,7 @@ RSpec.describe "Api::V1::Profiles", type: :request do
     let(:profile_data) { FactoryGirl.json_api_attributes_for(:master_data_profile).to_json }
     let(:invalid_profile_data) { FactoryGirl.json_api_attributes_for(:invalid_master_data_profile).to_json }
 
-
-    context "As an unauthentified Application" do
-      it "ask for authentification" do
-        post api_v1_profiles_path, profile_data, JSONAPI_HEADERS
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it "return an error" do
-        post api_v1_profiles_path, profile_data, JSONAPI_HEADERS
-        expect(JSON.parse(response.body)).to include("errors")
-      end
-    end
-
-    context "As an authentified Application with no scopes", :valid_oauth do
-      it "is forbidden" do
-        post api_v1_profiles_path, profile_data, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
-        expect(response).to have_http_status(:forbidden)
-      end
-    end
+    it_behaves_like 'a Oauth protected endpoint', :post, :api_v1_profiles_path,nil ,nil,JSONAPI_HEADERS
 
     context "When there is no resource owner", :valid_oauth do
       let!(:resource_owner_profile) {nil}
@@ -352,25 +299,7 @@ RSpec.describe "Api::V1::Profiles", type: :request do
 
     let!(:profile) { FactoryGirl.create(:master_data_profile)}
 
-
-    context "As an unauthentified Application" do
-      it "ask for authentification" do
-        delete api_v1_profile_path(profile), nil, JSONAPI_HEADERS
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it "return an error" do
-        delete api_v1_profile_path(profile), nil, JSONAPI_HEADERS
-        expect(JSON.parse(response.body)).to include("errors")
-      end
-    end
-
-    context "As an authentified Application with no scopes", :valid_oauth do
-      it "is forbidden" do
-        delete api_v1_profile_path(profile), nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
-        expect(response).to have_http_status(:forbidden)
-      end
-    end
+    it_behaves_like 'a Oauth protected endpoint', :delete, :api_v1_profile_path,100 ,nil,JSONAPI_HEADERS
 
     context "When there is no resource owner", :valid_oauth do
       let!(:resource_owner_profile) {nil}
@@ -423,25 +352,7 @@ RSpec.describe "Api::V1::Profiles", type: :request do
     let(:profile_data) { FactoryGirl.json_api_attributes_for(:master_data_profile,profile_attributes.merge({first_name: "Paul"})).deep_merge({data:{id:profile.id.to_s}}).to_json }
     let(:invalid_profile_data) { FactoryGirl.json_api_attributes_for(:invalid_master_data_profile, profile_attributes.merge({gender: 'cat'}) ).deep_merge( {data: {id: profile.id.to_s}} ).to_json }
 
-
-    context "As an unauthentified Application" do
-      it "ask for authentification" do
-        put api_v1_profile_path(profile), profile_data, JSONAPI_HEADERS
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it "return an error" do
-        put api_v1_profile_path(profile), profile_data, JSONAPI_HEADERS
-        expect(JSON.parse(response.body)).to include("errors")
-      end
-    end
-
-    context "As an authentified Application with no scopes", :valid_oauth do
-      it "is forbidden" do
-        put api_v1_profile_path(profile), profile_data, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
-        expect(response).to have_http_status(:forbidden)
-      end
-    end
+    it_behaves_like 'a Oauth protected endpoint', :put, :api_v1_profile_path,100 ,nil,JSONAPI_HEADERS
 
     context "When requesting the resource owner's profile", :valid_oauth do
       let!(:resource_owner_profile) {profile}

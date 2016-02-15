@@ -121,7 +121,10 @@ class Api::V1::ProfileResource < JSONAPI::Resource
   #
   # TODO
   # Find a way to pass @model for updatable and creatable fields
-  def self.allowed_fields_filter(access,_fields,context={},resource= @model)
+  def self.allowed_fields_filter(access,_fields,context={},resource= nil)
+
+    resource= context[:current_resource] || @model
+
     # Check if the client has an admin scope
     if context[:current_oauth_scopes] && context[:current_oauth_scopes].include?('scopes.admin')
       #Allow all
@@ -132,7 +135,7 @@ class Api::V1::ProfileResource < JSONAPI::Resource
 
       #Checks resource_owner rights over this resource
       scopes_directory.values_at(*context[:current_oauth_scopes]).compact.each do |h|
-        if ((h[:apply_on] == :collection) or (context[:current_user] && context[:current_user].profile == resource))
+        if ((h[:apply_on] == :collection) or (context[:current_user] && resource && context[:current_user].profile ==  resource))
           allowed_fields+=h[access].to_a.compact 
         end
       end
