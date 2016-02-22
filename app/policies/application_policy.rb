@@ -4,6 +4,10 @@ class ApplicationPolicy
   def initialize(user, record)
     @user = user
     @record = record
+    @oauth_scopes = user.scopes
+    @user_mockup = user && user.resource_owner_id && UserMockup.find(user.resource_owner_id)
+    @profile = @user_mockup && @user_mockup.profile
+    @oauth_app = user.application
   end
 
   def index?
@@ -36,6 +40,10 @@ class ApplicationPolicy
     def initialize(user, scope)
       @user = user
       @scope = scope
+      @oauth_scopes = user.scopes
+      @user_mockup = user && user.resource_owner_id && UserMockup.find(user.resource_owner_id)
+      @profile = @user_mockup && @user_mockup.profile
+      @oauth_app = user.application
     end
 
     def resolve

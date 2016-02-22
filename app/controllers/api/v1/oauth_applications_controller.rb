@@ -6,10 +6,10 @@ class Api::V1::OauthApplicationsController < Api::V1::BaseController
 
   
   # GET /api/v1/oauth_applications.json
-  scopes :index, 'scopes.oauth_apps.manage'
+  scopes :index, 'scopes.oauth_apps.manage', 'scopes.oauth_apps.public.readonly' 
 
   # GET /api/v1/oauth_applications/1.json
-  scopes :show, 'scopes.oauth_apps.manage'
+  scopes :show, 'scopes.oauth_apps.manage', 'scopes.oauth_apps.public.readonly' 
 
   # POST /api/v1/oauth_applications.json
   scopes :create, 'scopes.oauth_apps.manage', 'scopes.profiles.oauth_apps.readwrite'

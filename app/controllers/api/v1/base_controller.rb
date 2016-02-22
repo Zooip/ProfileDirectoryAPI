@@ -21,6 +21,7 @@ class Api::V1::BaseController < ApplicationController
     def context
       {
         current_resource: requested_resource, # This is a quick hack to enable use of attributes filtering on update in JSONAPI::Resource
+        current_token: doorkeeper_token,
         current_user: current_user,
         current_oauth_scopes: current_oauth_scopes,
         current_oauth_application: current_oauth_application,

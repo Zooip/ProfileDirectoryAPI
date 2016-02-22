@@ -13,6 +13,8 @@ gem 'foreigner'
 #gem 'active_model_serializers', :git => 'https://github.com/rails-api/active_model_serializers', :branch => 'master'
 gem 'jsonapi-resources'
 
+gem "pundit"
+
 gem 'will_paginate', '~> 3.0.6'
 
 # Use SCSS for stylesheets

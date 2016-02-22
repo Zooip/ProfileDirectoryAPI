@@ -1,4 +1,4 @@
-class Api::V1::PhoneNumberResource < JSONAPI::Resource
+class Api::V1::PhoneNumberResource < Api::V1::BaseResource
   model_name 'MasterData::PhoneNumber'
   model_hint model: MasterData::PhoneNumber
 

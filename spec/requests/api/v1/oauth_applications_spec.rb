@@ -14,9 +14,9 @@ RSpec.describe "Api::V1::OAuthApplications", type: :request do
   describe "GET /api/v1/oauth_applications" do
 
     let!(:application_owner) {FactoryGirl.create(:master_data_profile)}
-    let!(:unowned_app) { Doorkeeper::Application.create!(:name => "Unowned App", :redirect_uri => "https://app.com") }
-    let!(:private_app) { Doorkeeper::Application.create!(:name => "My Private App", :redirect_uri => "https://app.com",owner: application_owner) }
-    let!(:public_app) { Doorkeeper::Application.create!(:name => "My Public App", :redirect_uri => "https://app.com",owner: application_owner) }
+    let!(:unowned_app) { Doorkeeper::Application.create!(:name => "Unowned App", :redirect_uri => "https://app.com", is_public: false) }
+    let!(:private_app) { Doorkeeper::Application.create!(:name => "My Private App", :redirect_uri => "https://app.com",owner: application_owner, is_public: false) }
+    let!(:public_app) { Doorkeeper::Application.create!(:name => "My Public App", :redirect_uri => "https://app.com",owner: application_owner, is_public: true) }
 
     it_behaves_like 'a Oauth protected endpoint', :get, :api_v1_oauth_applications_path,nil ,nil,JSONAPI_HEADERS
 
@@ -125,7 +125,26 @@ RSpec.describe "Api::V1::OAuthApplications", type: :request do
         context "With valid attributes" do
 
           let(:valid_owned_attributes) {
-            FactoryGirl.json_api_attributes_for(:doorkeeper_application, owner: application_owner).to_json
+            #FactoryGirl.json_api_attributes_for(:doorkeeper_application, owner: application_owner).to_json
+            {"data":
+                {
+                    "type":"oauth_applications",
+                    "attributes":{
+                        "name":"My Awesome App !",
+                        "redirect_uri":"https://myawesomeapp.com/oauth/redirect",
+                        "scopes":""
+                        
+                    },
+                    "relationships": {
+                      "owner": {
+                         "data": {
+                            "type": "profiles",
+                            "id": "#{application_owner.id}"
+                          }
+                      }
+                    }
+                }
+            }.to_json
           }
 
           before :each do
@@ -149,7 +168,26 @@ RSpec.describe "Api::V1::OAuthApplications", type: :request do
 
         context "With invalid attributes" do
           let(:invalid_owned_attributes) {
-            FactoryGirl.json_api_attributes_for(:doorkeeper_application, redirect_uri: "*invalid_uri*", owner: application_owner).to_json
+            #FactoryGirl.json_api_attributes_for(:doorkeeper_application, redirect_uri: "*invalid_uri*", owner: application_owner).to_json
+            {"data":
+                {
+                    "type":"oauth_applications",
+                    "attributes":{
+                        "name":"My Awesome App !",
+                        "redirect_uri":"*invalid_uri*",
+                        "scopes":""
+                        
+                    },
+                    "relationships": {
+                      "owner": {
+                         "data": {
+                            "type": "profiles",
+                            "id": "#{application_owner.id}"
+                          }
+                      }
+                    }
+                }
+            }.to_json
           }
           before :each do
             post api_v1_oauth_applications_path,invalid_owned_attributes, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
@@ -174,7 +212,26 @@ RSpec.describe "Api::V1::OAuthApplications", type: :request do
       context "Add an application an other person" do
         let!(:resource_owner_profile) {other_person}
         let(:valid_owned_attributes) {
-          FactoryGirl.json_api_attributes_for(:doorkeeper_application, owner: other_person).to_json
+          #FactoryGirl.json_api_attributes_for(:doorkeeper_application, owner: other_person).to_json
+          {"data":
+              {
+                  "type":"oauth_applications",
+                  "attributes":{
+                      "name":"My Awesome App !",
+                      "redirect_uri":"https://myawesomeapp.com/oauth/redirect",
+                      "scopes":""
+                      
+                  },
+                  "relationships": {
+                    "owner": {
+                       "data": {
+                          "type": "profiles",
+                          "id": "#{other_person.id}"
+                        }
+                    }
+                  }
+              }
+          }.to_json
         }
 
         before :each do
@@ -188,6 +245,31 @@ RSpec.describe "Api::V1::OAuthApplications", type: :request do
         it "doesn't create an Application" do
           expect{
             post api_v1_oauth_applications_path,valid_owned_attributes, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
+          }.to change(Doorkeeper::Application, :count).by(0)
+        end
+
+        it "return an error" do
+          expect(JSON.parse(response.body).keys).to include("errors")
+        end
+      end
+
+      context "Add an unowned application" do
+        let!(:resource_owner_profile) {other_person}
+        let(:valid_unowned_attributes) {
+          FactoryGirl.json_api_attributes_for(:doorkeeper_application).to_json
+        }
+
+        before :each do
+          post api_v1_oauth_applications_path,valid_unowned_attributes, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
+        end
+
+        it "it respond with 403 Forbidden" do
+          expect(response).to have_http_status(:forbidden)
+        end
+
+        it "doesn't create an Application" do
+          expect{
+            post api_v1_oauth_applications_path,valid_unowned_attributes, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})
           }.to change(Doorkeeper::Application, :count).by(0)
         end
 

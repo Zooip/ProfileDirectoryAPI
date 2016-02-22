@@ -4,5 +4,6 @@ FactoryGirl.define do
     redirect_uri "https://myawesomeapp.com/oauth/redirect"
     scopes ""
     owner nil
+    is_public false
   end
 end

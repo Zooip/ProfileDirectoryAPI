@@ -1,4 +1,4 @@
-class Api::V1::ProfileResource < JSONAPI::Resource
+class Api::V1::ProfileResource < Api::V1::BaseResource
   model_name 'MasterData::Profile'
   model_hint model: MasterData::Profile
 

@@ -8,7 +8,7 @@ class JsonApiAttributesForStrategy
   def result(evaluation)
     {data:
       {
-        type: ObjectSpace.each_object(Class).select { |klass| klass < JSONAPI::Resource }.detect{|x| x._model_name.to_s.constantize==evaluation.object.class}._type,
+        type: ObjectSpace.each_object(Class).select { |klass| klass < JSONAPI::Resource }.detect{|x| x._model_name.to_s==evaluation.object.class.to_s}._type,
         attributes:@strategy.result(evaluation).select{|k,v| v}
       }
     }
