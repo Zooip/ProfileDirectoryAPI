@@ -210,7 +210,7 @@ RSpec.describe "Api::V1::OAuthApplications", type: :request do
       end
 
       context "Add an application an other person" do
-        let!(:resource_owner_profile) {other_person}
+        let!(:resource_owner_profile) {application_owner}
         let(:valid_owned_attributes) {
           #FactoryGirl.json_api_attributes_for(:doorkeeper_application, owner: other_person).to_json
           {"data":

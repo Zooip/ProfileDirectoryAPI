@@ -1,4 +1,5 @@
 class Doorkeeper::ApplicationPolicy < ApplicationPolicy
+ 
   def show?
     return true if @oauth_scopes && @oauth_scopes.include?('scopes.admin')
 
@@ -13,10 +14,13 @@ class Doorkeeper::ApplicationPolicy < ApplicationPolicy
     return false
   end
 
-  def create? 
+  def create?
     return true if @oauth_scopes && @oauth_scopes.include?('scopes.admin')
-
-    true
+    return true if @oauth_scopes && @oauth_scopes.include?('scopes.oauth_apps.manage')
+    if @oauth_scopes && @oauth_scopes.include?('scopes.profiles.oauth_apps.readwrite')
+      return true if @profile.id == record.owner_id && record.owner_type = :profile
+    end
+    return false
   end
 
   def update? 
@@ -47,10 +51,8 @@ class Doorkeeper::ApplicationPolicy < ApplicationPolicy
       if (@oauth_scopes && (@oauth_scopes.to_a & ['scopes.oauth_apps.manage','scopes.admin']).any?)
         return scope
       end
-
       return scope.where(is_public: true)
     end
-
   end
 
 end

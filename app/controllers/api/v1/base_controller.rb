@@ -9,8 +9,29 @@ class Api::V1::BaseController < ApplicationController
   # Should be false by default
   before_action :set_debug_headers
 
+ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+   private
+
+  # https://github.com/cerebris/jsonapi-resources/pull/573
+  def handle_exceptions(e)
+    if JSONAPI.configuration.exception_class_whitelist.any? { |k| e.class.ancestors.include?(k) }
+      raise e
+    else
+      super
+    end
+  end
 
   private
+    def user_not_authorized
+      render json: {
+        errors:[
+          { status: '403 Forbidden',
+            code: 403,
+            title: "Not allowed to access this ressource",
+           }]
+        }, status: :forbidden
+    end
 
     # Add a custom header to tell ResponseTimer midleware to display execution time
     def set_debug_headers
@@ -36,3 +57,4 @@ class Api::V1::BaseController < ApplicationController
       nil
     end
 end
+

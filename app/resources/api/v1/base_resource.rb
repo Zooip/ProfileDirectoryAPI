@@ -2,6 +2,7 @@ class Api::V1::BaseResource < JSONAPI::Resource
 
   abstract
 
+
   ##
   # Override default method to fetch all records
   # Use Pundit::Scopes to return only authorized records
