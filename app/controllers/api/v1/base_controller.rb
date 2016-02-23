@@ -46,6 +46,8 @@ class Api::V1::BaseController < ApplicationController
         current_user: current_user,
         current_oauth_scopes: current_oauth_scopes,
         current_oauth_application: current_oauth_application,
+        controller: self,
+        current_action: params[:action]
       }
     end
 

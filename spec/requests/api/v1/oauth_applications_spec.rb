@@ -280,4 +280,150 @@ RSpec.describe "Api::V1::OAuthApplications", type: :request do
     end
   end
 
+  describe "GET /api/v1/oauth_applications/:id" do
+
+    let!(:client_app) { Doorkeeper::Application.create!(:name => "Unowned App", :redirect_uri => "https://app.com", is_public: false) }
+
+    it_behaves_like 'a Oauth protected endpoint', :get, :api_v1_oauth_application_path,100 ,nil,JSONAPI_HEADERS
+
+    describe "Request a private unowned application" do
+      let!(:oauth_application) { Doorkeeper::Application.create!(:name => "My Private App", :redirect_uri => "https://app.com",owner: nil, is_public: false) }
+
+      context "When the client has the oauth_apps.manage scope", :manage_oauth_apps do
+        let!(:client_application) {client_app}
+
+        before :each do
+          get api_v1_oauth_application_path(oauth_application.id),nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})        
+        end
+
+        it "it respond with sucess" do
+          expect(response).to have_http_status(:success)
+        end
+
+        it "return all oauth_applications" do
+          expect(JSON.parse(response.body)['data']['type']).to eq('oauth_applications')
+          expect(JSON.parse(response.body)['data']['id']).to eq(oauth_application.id.to_s)
+          expect(JSON.parse(response.body)['data']['attributes']['name']).to eq(oauth_application.name)
+        end
+      end
+
+      context "When the client has the oauth_apps.public.readonly scope", :valid_oauth do
+        let!(:client_application) {client_app}
+        let!(:scopes) { 'scopes.oauth_apps.public.readonly' }
+        let!(:resource_owner_profile) {nil}
+
+        before :each do
+          get api_v1_oauth_application_path(oauth_application.id),nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})        
+        end
+
+        it "it respond with Not Found" do
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it "return errors" do
+          expect(JSON.parse(response.body).keys).to include("errors")
+        end
+      end
+    end
+    describe "Request a private owned applicationr" do
+
+      let!(:application_owner) {FactoryGirl.create(:master_data_profile)}
+      let!(:oauth_application) { Doorkeeper::Application.create!(:name => "My Private App", :redirect_uri => "https://app.com",owner: application_owner, is_public: false) }
+
+      context "When the client has the oauth_apps.manage scope", :manage_oauth_apps do
+        let!(:client_application) {client_app}
+
+        before :each do
+          get api_v1_oauth_application_path(oauth_application.id),nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})        
+        end
+
+        it "it respond with sucess" do
+          expect(response).to have_http_status(:success)
+        end
+
+        it "return all oauth_applications" do
+          expect(JSON.parse(response.body)['data']['type']).to eq('oauth_applications')
+          expect(JSON.parse(response.body)['data']['id']).to eq(oauth_application.id.to_s)
+          expect(JSON.parse(response.body)['data']['attributes']['name']).to eq(oauth_application.name)
+        end
+      end
+
+      context "When the client has the scopes.profiles.oauth_apps.readonly scope", :valid_oauth do
+        let!(:client_application) {client_app}
+        let!(:scopes) { 'scopes.profiles.oauth_apps.readonly' }
+
+        context "When the resource owner is not the application owner" do
+          let!(:resource_owner_profile) {FactoryGirl.create(:master_data_profile)}
+
+          before :each do
+            get api_v1_oauth_application_path(oauth_application.id),nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})        
+          end
+
+          it "it respond with Not Found" do
+            expect(response).to have_http_status(:not_found)
+          end
+
+          it "return errors" do
+            expect(JSON.parse(response.body).keys).to include("errors")
+          end
+        end
+
+        context "When the resource owner is the application owner" do
+          let!(:resource_owner_profile) {application_owner}
+
+          before :each do
+            get api_v1_oauth_application_path(oauth_application.id),nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})        
+          end
+
+          it "it respond with sucess" do
+            expect(response).to have_http_status(:success)
+          end
+
+          it "return all oauth_applications" do
+            expect(JSON.parse(response.body)['data']['type']).to eq('oauth_applications')
+            expect(JSON.parse(response.body)['data']['id']).to eq(oauth_application.id.to_s)
+            expect(JSON.parse(response.body)['data']['attributes']['name']).to eq(oauth_application.name)
+          end
+        end
+      end
+
+      context "When the client has the scopes.oauth_apps.public.readonly scope", :valid_oauth do
+        let!(:client_application) {client_app}
+        let!(:scopes) { 'scopes.oauth_apps.public.readonly' }
+
+        context "When the resource owner is not the application owner" do
+          let!(:resource_owner_profile) {FactoryGirl.create(:master_data_profile)}
+
+          before :each do
+            get api_v1_oauth_application_path(oauth_application.id),nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})        
+          end
+
+          it "it respond with Not Found" do
+            expect(response).to have_http_status(:not_found)
+          end
+
+          it "return errors" do
+            expect(JSON.parse(response.body).keys).to include("errors")
+          end
+        end
+
+        context "When the resource owner is the application owner" do
+          let!(:resource_owner_profile) {application_owner}
+
+          before :each do
+            get api_v1_oauth_application_path(oauth_application.id),nil, JSONAPI_HEADERS.merge({"Authorization" => "Bearer #{token.token}"})        
+          end
+
+          it "it respond with Not Found" do
+            expect(response).to have_http_status(:not_found)
+          end
+
+          it "return errors" do
+            expect(JSON.parse(response.body).keys).to include("errors")
+          end
+        end
+      end
+    end
+  end
+
 end

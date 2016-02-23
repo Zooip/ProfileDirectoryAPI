@@ -1,17 +1,17 @@
 class MasterData::ProfilePolicy < ApplicationPolicy
   def show?
-    record == user.profile
+    record == @profile
   end
 
-  def create? 
+  def create?
     true
   end
 
   def update? 
-    record.user == user
+    record == @profile
   end
 
   def destroy?
-    record.user == user
+    record.user == @profile
   end
 end

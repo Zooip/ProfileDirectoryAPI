@@ -1,38 +1,42 @@
 class Doorkeeper::ApplicationPolicy < ApplicationPolicy
  
   def show?
-    return true if @oauth_scopes && @oauth_scopes.include?('scopes.admin')
 
-    if @oauth_scopes && @oauth_scopes.include?('scopes.oauth_apps.public.readonly')
-      return @record.is_public
+    if @oauth_scopes
+      return true if @oauth_scopes.include?('scopes.admin')
+      return true if @oauth_scopes.include?('scopes.oauth_apps.manage')
+      return @record.is_public if @oauth_scopes.include?('scopes.oauth_apps.public.readonly')
+      byebug
+      return (@profile == record.owner) if (@oauth_scopes.to_a & ['scopes.oauth_apps.manage','scopes.admin']).any?
     end
-
-    if @oauth_scopes && @oauth_scopes.include?('scopes.oauth_apps.manage')
-      return true
-    end
-
     return false
   end
 
   def create?
-    return true if @oauth_scopes && @oauth_scopes.include?('scopes.admin')
-    return true if @oauth_scopes && @oauth_scopes.include?('scopes.oauth_apps.manage')
-    if @oauth_scopes && @oauth_scopes.include?('scopes.profiles.oauth_apps.readwrite')
-      return true if @profile.id == record.owner_id && record.owner_type = :profile
+    if @oauth_scopes
+      return true if @oauth_scopes.include?('scopes.admin')
+      return true if @oauth_scopes.include?('scopes.oauth_apps.manage')
+      return (@profile == record.owner) if @oauth_scopes.include?('scopes.profiles.oauth_apps.readwrite')
     end
     return false
   end
 
   def update? 
-    return true if @oauth_scopes && @oauth_scopes.include?('scopes.admin')
-
-    record.user == user
+    if @oauth_scopes
+      return true if @oauth_scopes.include?('scopes.admin')
+      return true if @oauth_scopes.include?('scopes.oauth_apps.manage')
+      return (@profile == record.owner) if @oauth_scopes.include?('scopes.profiles.oauth_apps.readwrite')
+    end
+    return false
   end
 
   def destroy?
-    return true if @oauth_scopes && @oauth_scopes.include?('scopes.admin')
-
-    record.user == user
+    if @oauth_scopes
+      return true if @oauth_scopes.include?('scopes.admin')
+      return true if @oauth_scopes.include?('scopes.oauth_apps.manage')
+      return (@profile == record.owner) if @oauth_scopes.include?('scopes.profiles.oauth_apps.readwrite')
+    end
+    return false
   end
 
   class Scope
@@ -51,7 +55,10 @@ class Doorkeeper::ApplicationPolicy < ApplicationPolicy
       if (@oauth_scopes && (@oauth_scopes.to_a & ['scopes.oauth_apps.manage','scopes.admin']).any?)
         return scope
       end
-      return scope.where(is_public: true)
+      if (@oauth_scopes && (@oauth_scopes.to_a & ['scopes.profiles.oauth_apps.readonly','scopes.profiles.oauth_apps.readwrite']).any?)
+        return scope.where("is_public = TRUE OR (owner_id = :owner_id AND owner_type = 'MasterData::Profile')", {owner_id: @profile && @profile.id})
+      end
+      return scope.where("is_public = TRUE")
     end
   end
 
