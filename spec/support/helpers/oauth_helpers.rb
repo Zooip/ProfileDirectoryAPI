@@ -41,13 +41,28 @@ module OauthHelpers
         self.send(http_verb,send(path,path_params),body,default_headers.merge({"Authorization" => "Bearer #{token.token}"}))
       end
 
-      it "is forbidden" do
-        expect(response).to have_http_status(:forbidden)
-      end
-
-      it "return an error" do
-        expect(JSON.parse(response.body).keys).to include("errors")
-      end
+      include_examples "invalid scopes error"
     end
   end
+
+  RSpec.shared_examples "invalid scopes error", :invalid_scopes_error do
+    it "it respond with 403 Forbidden" do
+      expect(response).to have_http_status(:forbidden)
+    end
+    it "return invalid scopes error" do
+      expect(JSON.parse(response.body)["errors"].map{|x| x["title"]}).to include("Invalid Scopes")
+    end
+  end
+
+
+  RSpec.shared_examples "not found error", :not_fount_error do
+    it "it respond with 404 Not Found" do
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "return errors" do
+      expect(JSON.parse(response.body).keys).to include("errors")
+    end
+  end
+
 end

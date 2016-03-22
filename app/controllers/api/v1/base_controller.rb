@@ -10,6 +10,7 @@ class Api::V1::BaseController < ApplicationController
   before_action :set_debug_headers
 
  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+ rescue_from ActiveRecord::RecordNotFound, with: :render_404_not_found
 
    private
 
@@ -57,6 +58,17 @@ class Api::V1::BaseController < ApplicationController
     #TODO
     def requested_resource
       nil
+    end
+
+    def render_404_not_found (e)
+      render json: {
+      errors:[
+        { status: '404 Not Found',
+          code: 404,
+          title: 'Resource not found',
+          detail: 'Not able to find this resource with your current access token',
+         }]
+      }, status: :not_found
     end
 end
 

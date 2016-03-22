@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/Zooip/jsonapi-resources
+  revision: 5857dd9d054d6028c56fd2b6f2e3aa653e95be9e
+  branch: fix_nil_data_on_polymorphic_to_one_relationship
+  specs:
+    jsonapi-resources (0.7.0)
+      rails (>= 4.0)
+
+GIT
   remote: https://github.com/loocla/omniauth-cas.git
   revision: 16395f85579dc915c0e22f80b4f5d98a019e37ec
   branch: saml
@@ -102,8 +110,6 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.3)
-    jsonapi-resources (0.7.0)
-      rails (>= 4.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -224,7 +230,7 @@ DEPENDENCIES
   foreigner
   jbuilder (~> 2.0)
   jquery-rails
-  jsonapi-resources
+  jsonapi-resources!
   omniauth
   omniauth-cas!
   pg
@@ -242,4 +248,4 @@ DEPENDENCIES
   will_paginate (~> 3.0.6)
 
 BUNDLED WITH
-   1.10.6
+   1.11.2

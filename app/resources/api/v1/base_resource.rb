@@ -10,6 +10,7 @@ class Api::V1::BaseResource < JSONAPI::Resource
   # action. Also, mark the controller as having been policy authorized.
   def authorize
     run_callbacks :authorize do
+
       policy = Pundit.policy!(context.fetch(:current_token), @model)
       permission = "#{context.fetch(:current_action)}?"
 
@@ -39,10 +40,14 @@ class Api::V1::BaseResource < JSONAPI::Resource
       when JSONAPI::Relationship::ToOne
         record_or_records
       when JSONAPI::Relationship::ToMany
-        ::Pundit.policy_scope!(context[:user], record_or_records)
+        ::Pundit.policy_scope!(context[:current_token], record_or_records)
       else
         raise "Unknown relationship type #{relationship.inspect}"
       end
+  end
+
+  def fetchable_fields
+    super.to_a & Pundit.policy!(context.fetch(:current_token), @model).fetchable_fields.to_a
   end
 
 end

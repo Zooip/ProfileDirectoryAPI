@@ -1,7 +1,7 @@
 class Api::V1::OauthApplicationsController < Api::V1::BaseController
   include Oauthable
 
-  before_action :set_application, only: [:show, :update, :destroy, :reset_secret]
+  before_action :set_application, only: [:reset_secret]
   before_action :set_debug_headers
 
   
@@ -15,18 +15,28 @@ class Api::V1::OauthApplicationsController < Api::V1::BaseController
   scopes :create, 'scopes.oauth_apps.manage', 'scopes.profiles.oauth_apps.readwrite'
 
   # PATCH/PUT /api/v1/oauth_applications/1.json
-  scopes :update, 'scopes.oauth_apps.manage'
+  scopes :update, 'scopes.oauth_apps.manage','scopes.profiles.oauth_apps.readwrite'
 
   # DELETE /api/v1/oauth_applications/1.json
-  scopes :destroy, 'scopes.oauth_apps.manage'
+  scopes :destroy, 'scopes.oauth_apps.manage','scopes.profiles.oauth_apps.readwrite'
+
+
+  scopes :update_relationship, 'scopes.oauth_apps.manage'
+  scopes :create_relationship, 'scopes.oauth_apps.manage'
+  scopes :destroy_relationship, 'scopes.oauth_apps.manage'
+  scopes :show_relationship, 'scopes.oauth_apps.manage', 'scopes.oauth_apps.public.readonly', 'scopes.profiles.oauth_apps.readonly', 'scopes.profiles.oauth_apps.readwrite'
+  scopes :get_related_resource, 'scopes.oauth_apps.manage', 'scopes.oauth_apps.public.readonly', 'scopes.profiles.oauth_apps.readonly', 'scopes.profiles.oauth_apps.readwrite'
 
   # PATCH/PUT /api/v1/oauth_applications/1/reset_secret.json
-  scopes :reset_secret, 'scopes.oauth_apps.manage'
+  scopes :reset_secret, 'scopes.oauth_apps.manage','scopes.profiles.oauth_apps.readwrite'
   def reset_secret
+
+      policy = Pundit.policy!(doorkeeper_token, @application)
+      raise Pundit::NotAuthorizedError.new(query: "update?", record: @application, policy: policy) unless policy.update? 
       @application.secret = Doorkeeper::OAuth::Helpers::UniqueToken.generate
 
       if @application.save
-        render :show
+        redirect_to api_v1_oauth_application_path(@application)
       else
         render json: @application.errors, status: :unprocessable_entity
       end
@@ -35,7 +45,7 @@ class Api::V1::OauthApplicationsController < Api::V1::BaseController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_application
-      @application = Doorkeeper::Application.find(params[:id])
+      @application = Pundit.policy_scope(doorkeeper_token,Doorkeeper::Application).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

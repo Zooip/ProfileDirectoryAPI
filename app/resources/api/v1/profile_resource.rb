@@ -124,7 +124,7 @@ class Api::V1::ProfileResource < Api::V1::BaseResource
   def self.allowed_fields_filter(access,_fields,context={},resource= nil)
 
     resource= context[:current_resource] || @model
-
+    
     # Check if the client has an admin scope
     if context[:current_oauth_scopes] && context[:current_oauth_scopes].include?('scopes.admin')
       #Allow all

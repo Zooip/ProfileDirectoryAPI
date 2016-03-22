@@ -19,6 +19,6 @@ class Api::V1::OauthApplicationResource < Api::V1::BaseResource
 
   private
     def prefix_owner_type
-      @model.owner_type="MasterData::#{@model.owner_type}" if @model.owner_type
+      @model.owner_type="MasterData::#{@model.owner_type}" if @model.owner_type && !@model.owner_type.start_with?("MasterData::") 
     end
 end

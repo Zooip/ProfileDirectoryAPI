@@ -11,7 +11,7 @@ gem 'foreigner'
 
 #Custom JSON serialization
 #gem 'active_model_serializers', :git => 'https://github.com/rails-api/active_model_serializers', :branch => 'master'
-gem 'jsonapi-resources'
+gem 'jsonapi-resources', git: 'https://github.com/Zooip/jsonapi-resources', branch: 'fix_nil_data_on_polymorphic_to_one_relationship'
 
 gem "pundit"
 

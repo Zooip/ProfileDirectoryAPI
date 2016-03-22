@@ -16,9 +16,11 @@ Rails.application.routes.draw do
         #resources :connection_aliases 
       end
       jsonapi_resources :oauth_applications do
-        jsonapi_relationships
+        jsonapi_related_resource :owner, controller: 'profiles'
+        jsonapi_links :owner
+
         member do
-          get 'reset_secret'
+          post 'reset_secret'
         end
       end
       jsonapi_resources :phone_numbers do

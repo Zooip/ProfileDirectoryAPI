@@ -11,7 +11,7 @@ module Oauthable
     # Doorkeeper authorization MUST be placed in a before_action since it doesn't
     # raise an error but only use a render
     # Using it inside a Controler action may cause double render error
-    before_action do
+    prepend_before_action do
       _scopes=scopes_for(requested_action)
       _scopes.presence ? doorkeeper_authorize!(*_scopes) : doorkeeper_authorize!
     end
