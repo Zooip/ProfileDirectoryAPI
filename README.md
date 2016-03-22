@@ -1,4 +1,5 @@
 # Profile Directory API #
+[![Code Climate](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI/badges/gpa.svg)](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI) <a href="https://codeclimate.com/github/Zooip/ProfileDirectoryAPI/coverage"><img src="https://codeclimate.com/github/Zooip/ProfileDirectoryAPI/badges/coverage.svg" /></a>
 ## What is this ? ##
 
 Enable acces to an user profile directory with an OAuth 2 protected API using JSONAPI specifications (jsonapi.org)

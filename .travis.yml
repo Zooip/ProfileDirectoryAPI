@@ -1,0 +1,17 @@
+language: ruby
+sudo: false
+rvm:
+  - 2.2.2
+services:
+  - postgresql
+addons:
+  code_climate:
+    repo_token: 9c2c89acc2fb5814fedaeef17e33af5a3d632a2db2c0d51c9d55f918ee5df9c2
+before_script:
+  - cp config/database.travis.yml config/database.yml
+  - psql -c 'create database travis_ci_test_masterdata;' -U postgres
+  - psql -c 'create database travis_ci_test_engine;' -U postgres
+script:
+  - RAILS_ENV=test bundle exec rake db:schema:load --trace
+  - RAILS_ENV=test bundle exec rake master_data:db:migrate
+  - RAILS_ENV=test bundle exec rspec spec/
