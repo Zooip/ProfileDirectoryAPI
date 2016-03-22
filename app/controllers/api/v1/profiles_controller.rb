@@ -21,4 +21,6 @@ class Api::V1::ProfilesController < Api::V1::BaseController
 
   # DELETE /api/v1/profiles/1.json
   scopes :destroy, 'scopes.profiles.delete'
+
+  scopes :get_related_resource, 'scopes.oauth_apps.manage', 'scopes.oauth_apps.public.readonly', 'scopes.profiles.oauth_apps.readonly', 'scopes.profiles.oauth_apps.readwrite'
 end

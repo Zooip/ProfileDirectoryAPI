@@ -27,7 +27,7 @@ class Api::V1::OauthApplicationsController < Api::V1::BaseController
   scopes :show_relationship, 'scopes.oauth_apps.manage', 'scopes.oauth_apps.public.readonly', 'scopes.profiles.oauth_apps.readonly', 'scopes.profiles.oauth_apps.readwrite'
   scopes :get_related_resource, 'scopes.oauth_apps.manage', 'scopes.oauth_apps.public.readonly', 'scopes.profiles.oauth_apps.readonly', 'scopes.profiles.oauth_apps.readwrite'
 
-  # PATCH/PUT /api/v1/oauth_applications/1/reset_secret.json
+  # POST /api/v1/oauth_applications/1/reset_secret.json
   scopes :reset_secret, 'scopes.oauth_apps.manage','scopes.profiles.oauth_apps.readwrite'
   def reset_secret
 
