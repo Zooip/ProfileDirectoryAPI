@@ -1253,13 +1253,13 @@ RSpec.describe "Api::V1::OAuthApplications", type: :request do
             context "the other person doesn't exist" do
               let(:body) {transfer_to_non_existing_guy_body}
 
-              it "respond with 422 Unprocessable Entity" do
-                expect(response).to have_http_status(:unprocessable_entity)
-              end
+              it "respond with 200 Success" do
+                expect(response).to have_http_status(:success)
+              end 
 
-              it "doesn't transfer ownership" do
+              it "delete ownership" do
                 oauth_application.reload
-                expect(oauth_application.owner).to eq(application_owner)
+                expect(oauth_application.owner).to eq(nil)
               end
             end
           end
