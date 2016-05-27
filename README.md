@@ -1,5 +1,5 @@
 # Profile Directory API #
-[![Code Climate](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI/badges/gpa.svg)](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI) [![Test Coverage](https://codeclimate.com/github/Zooip/gram_v1_client/badges/coverage.svg)](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI/coverage) [![Build Status](https://travis-ci.org/Zooip/ProfileDirectoryAPI.svg?branch=master)](https://travis-ci.org/Zooip/ProfileDirectoryAPI)
+[![Code Climate](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI/badges/gpa.svg)](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI) [![Test Coverage](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI/badges/coverage.svg)](https://codeclimate.com/github/Zooip/ProfileDirectoryAPI/coverage) [![Build Status](https://travis-ci.org/Zooip/ProfileDirectoryAPI.svg?branch=master)](https://travis-ci.org/Zooip/ProfileDirectoryAPI)
 ## What is this ? ##
 
 Enable acces to an user profile directory with an OAuth 2 protected API using JSONAPI specifications (jsonapi.org)
